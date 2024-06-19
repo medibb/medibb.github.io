@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Harlow Malloc">
-<meta name="dcterms.date" content="2023-06-24">
+<meta name="author" content="Jaehyun Lee">
+<meta name="dcterms.date" content="2024-03-30">
 
-<title>Jaehyun Lee MD - Post With Code</title>
+<title>Jaehyun Lee MD - ChatGPT 를 옵시디언에서 사용하기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -168,11 +134,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Post With Code</h1>
+      <h1 class="title">ChatGPT 를 옵시디언에서 사용하기</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">news</div>
-                <div class="quarto-category">code</div>
-                <div class="quarto-category">analysis</div>
+                <div class="quarto-category">ChatGPT</div>
+                <div class="quarto-category">API</div>
               </div>
                   </div>
   </div>
@@ -183,14 +148,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Harlow Malloc </p>
+               <p>Jaehyun Lee </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 24, 2023</p>
+        <p class="date">March 30, 2024</p>
       </div>
     </div>
     
@@ -211,13 +176,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>This is a post with executable code.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<ol type="1">
+<li><strong>서론</strong></li>
+</ol>
+<p>ChatGPT 는 두 가지 유료 정책을 가지고 있다. GPT플러스를 구독해서 사용하는 방법과 API Key를 사용하는 방법이다.</p>
+<blockquote class="blockquote">
+<p><em>API key 란?</em></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>API 키는 응용 프로그램 프로그래밍 인터페이스(API)에 대한 액세스 권한을 부여하는 코드입니다. 이것은 일종의 패스워드로, 사용자나 프로그램이 API를 활용하여 특정 기능을 사용하거나 데이터에 접근할 수 있게 해줍니다.</p>
+</blockquote>
+<p>전자는 22달러 정기 결제를 사용해야 하는 방법이다. 사용하지 않아도 매달 정액제로 돈을 낸다.</p>
+<p>대신 ‘DALLE’같은 이미지생성AI, ’나의 GPTs’ 와 ’GPT스토어’를 사용할 수 있다.</p>
+<p>반대로 API key는 사용한만큼 돈을 내는 방법이다. 사용 설정을 하려면 chat.openai.com 이 아니라 platform.openai.com에서 키를 만들어야한다.</p>
+<p>다만, 24년 3월 부터 미리 선결제하고 차감하는 방식으로 바뀌었다.</p>
+<p>가격정책은 GPT-4의 경우 24년 3월 기준 백만 Token(토큰)당 30달러라고 되어 있다. 대략 영어 4 글자가 1 토큰이므로 1글자 당 0.0000075달러라고 할 수 있다. 한글은 좀 더 토큰화 효율이 안 좋다고 한다.</p>
+<blockquote class="blockquote">
+<p><em>토큰(Token) 이란?</em></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>GPT 모델에서의 토큰은 일상 언어에서 사용하는 단어나 문장 부호와 같은 것을 더 작은 단위로 쪼갠 것을 의미합니다.</p>
+</blockquote>
+<p>토큰들은 AI 언어 모델이 활용하기 쉽도록 쪼개놓은 글자 조각이며, 질문의 텍스트가 토큰으로 변환되어 다음 토큰을 예측하여 응답을 생성하는 방식으로 작동합니다.</p>
+<p>대략 번역과 정보검색 정도로 열흘 사용하고 현재 1달러 정도가 차감되었다. 기능에 비해 그렇게 비싼 가격은 아닐 수 있지만, GPT-3.5 turbo의 경우 백만 토큰당 0.5달러이기 때문에.. 정말로 걱정없이 사용할 수 있다. 캐주얼한 사용에는 3.5도 괜찮은 것 같다.</p>
+<div class="column" style="width:50%;">
+<p><img src="api_image.png" class="img-fluid"></p>
 </div>
-</div>
+<p><strong>2. 방법</strong></p>
+<ul>
+<li><p>platform.openai.com 접속</p></li>
+<li><p>API keys -&gt; Create new secret key</p>
+<ul>
+<li>첫 생성 시에만 확인 가능하니 메모장에 잘 복사해 놓는 것이 좋다.</li>
+</ul></li>
+<li><p>Obsidian -&gt; community plugin -&gt; text generator 설치</p></li>
+<li><p>Text generator LLM setting -&gt; OpenAIChat 선택 / API key에 복사한 openai API key 붙여넣기</p>
+<ul>
+<li><p>기본 단축키는 윈도우 기준 Ctrl + J.</p></li>
+<li><p>원하는 템플레잇을 만들고 Ctrl + Shift + J 로 템플레잇을 선택해서, 메일작성 / 개요작성 / 리뷰에 어울리는 어투로 다듬기 / 번역 등을 할 수 있다.</p></li>
+</ul></li>
+</ul>
+<p><strong>3. 결과</strong></p>
+<p><strong>4. 결론</strong> - ‘GPTstore’ 활용, ’나만의 GPT’를 fine tuning, DallE로 이미지생성을 즐기려면 <strong>GPT PLUS 구독</strong></p>
+<ul>
+<li>마크다운 기반의 문서 편집을 하는 도중에 즉시적인 GPT를 사용하기 위해서는 선결제 방식의 <strong>API key 사용</strong></li>
+</ul>
 
 
 

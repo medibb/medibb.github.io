@@ -655,7 +655,7 @@
     "href": "04blog.html",
     "title": "Blog",
     "section": "",
-    "text": "RESEARCH TOPICS\n\n\n\n\n\n\nMOC\n\n\nresearch\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJun 24, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\nNo matching items"
+    "text": "RESEARCH TOPICS\n\n\n\n\n\n\nMOC\n\n\nresearch\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\n\n\n\n\n\n\nChatGPT 를 옵시디언에서 사용하기\n\n\n\n\n\n\nChatGPT\n\n\nAPI\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -667,9 +667,9 @@
   {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
+    "title": "ChatGPT 를 옵시디언에서 사용하기",
     "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+    "text": "서론\n\nChatGPT 는 두 가지 유료 정책을 가지고 있다. GPT플러스를 구독해서 사용하는 방법과 API Key를 사용하는 방법이다.\n\nAPI key 란?\n\n\nAPI 키는 응용 프로그램 프로그래밍 인터페이스(API)에 대한 액세스 권한을 부여하는 코드입니다. 이것은 일종의 패스워드로, 사용자나 프로그램이 API를 활용하여 특정 기능을 사용하거나 데이터에 접근할 수 있게 해줍니다.\n\n전자는 22달러 정기 결제를 사용해야 하는 방법이다. 사용하지 않아도 매달 정액제로 돈을 낸다.\n대신 ‘DALLE’같은 이미지생성AI, ’나의 GPTs’ 와 ’GPT스토어’를 사용할 수 있다.\n반대로 API key는 사용한만큼 돈을 내는 방법이다. 사용 설정을 하려면 chat.openai.com 이 아니라 platform.openai.com에서 키를 만들어야한다.\n다만, 24년 3월 부터 미리 선결제하고 차감하는 방식으로 바뀌었다.\n가격정책은 GPT-4의 경우 24년 3월 기준 백만 Token(토큰)당 30달러라고 되어 있다. 대략 영어 4 글자가 1 토큰이므로 1글자 당 0.0000075달러라고 할 수 있다. 한글은 좀 더 토큰화 효율이 안 좋다고 한다.\n\n토큰(Token) 이란?\n\n\nGPT 모델에서의 토큰은 일상 언어에서 사용하는 단어나 문장 부호와 같은 것을 더 작은 단위로 쪼갠 것을 의미합니다.\n\n토큰들은 AI 언어 모델이 활용하기 쉽도록 쪼개놓은 글자 조각이며, 질문의 텍스트가 토큰으로 변환되어 다음 토큰을 예측하여 응답을 생성하는 방식으로 작동합니다.\n대략 번역과 정보검색 정도로 열흘 사용하고 현재 1달러 정도가 차감되었다. 기능에 비해 그렇게 비싼 가격은 아닐 수 있지만, GPT-3.5 turbo의 경우 백만 토큰당 0.5달러이기 때문에.. 정말로 걱정없이 사용할 수 있다. 캐주얼한 사용에는 3.5도 괜찮은 것 같다.\n\n\n\n2. 방법\n\nplatform.openai.com 접속\nAPI keys -&gt; Create new secret key\n\n첫 생성 시에만 확인 가능하니 메모장에 잘 복사해 놓는 것이 좋다.\n\nObsidian -&gt; community plugin -&gt; text generator 설치\nText generator LLM setting -&gt; OpenAIChat 선택 / API key에 복사한 openai API key 붙여넣기\n\n기본 단축키는 윈도우 기준 Ctrl + J.\n원하는 템플레잇을 만들고 Ctrl + Shift + J 로 템플레잇을 선택해서, 메일작성 / 개요작성 / 리뷰에 어울리는 어투로 다듬기 / 번역 등을 할 수 있다.\n\n\n3. 결과\n4. 결론 - ‘GPTstore’ 활용, ’나만의 GPT’를 fine tuning, DallE로 이미지생성을 즐기려면 GPT PLUS 구독\n\n마크다운 기반의 문서 편집을 하는 도중에 즉시적인 GPT를 사용하기 위해서는 선결제 방식의 API key 사용"
   },
   {
     "objectID": "about.html#education-training",
@@ -1230,5 +1230,12 @@
     "title": "2024 PT실 운동교육자료",
     "section": "",
     "text": "목표: 골반회전 운동조절능력 향상, 흉요근막 강화\n개요: 일상생활 중 지속된 통증에서 벗어나 3~4 점 이하의 중등도~경한 통증으로 줄어든 경우, 광배근과 둔근의 운동을 통해 흉요근막을 강화하여 추가적인 요추 안정화를 얻고, 골반의 후방회전을 제한하고 고관절을 사용하는 방법을 익힌다.\n운동 종류: 힙앱덕션, 시티드로우, 얕은 스쿼트\n\n\n\n운동 교육 (필요 시, 질문 시):\n\n\n흉요근막 이해시키기 : 흉요근막은 광배근과 둔근은 흉요근막을 통해 상하체의 힘을 서로 전달해주며, 코어안정화에 중요한 구조물이며, 그 자체를 코어근육군으로 분류할 수 있다.\n얕은 스쿼트 하는 이유 : 개인의 고관절 모양에 따라 골반의 회전이 일어나는 시기가 다를 수 있다.\n힙앱덕션 하는 이유 : 엉덩이 근육 운동중에서는 척추의 시상면 상의 움직임을 유발하는 레그익스텐션(대둔근) 운동보다 허리를 고정하고 수평방향으로 운동하는 힙앱덕션(중둔근) 운동으로 시작하는 것이 좋다. 머신으로 시작하면 가장 안정적이나 밴드도 사용가능\n\n\n\n\n2-1. 포티스쿼트2-2. 엉덩이 벌리기 운동2-3. 앉아서 노젓기 운동\n\n\n\n포티 스쿼트를 활용한 하체운동 과 고관절 운동조절능력 향상(hip hinge motorcontrol and potty squat)\n\n\n❗ 욕심내어 깊이 앉아 엉덩이 윙크가 일어나지 않도록 주의\n\n\n\n준비자세 : 다리를 어깨넓이로 바로 선자세에서 기본자세를 유지하고 복부고정을 시행한다.\n얕게 앉기 : 고관절만을 사용하여 엉덩이를 뒤로 빼며 살짝 앉는 스쿼트(20 ~ 30도만)를 수행\n무릎은 발끝보다 앞으로 나가지 않도록 주의하고 팔을 앞으로 내밀어 균형을 잡습니다.\n일어서기 : 엉덩이 근육을 서로 모은다는 느낌으로 몸을 일으키며 원래자세로 돌아옵니다.\n8~15회 3세트 수행합니다.\n\n\n\n\n힙앱덕션을 통한 둔근 강화 (hip abduction - gluteus strengthening)\n\n\n\n\n집에서 탄성밴드로 간단히, 시간이 되면 기계를 사용하여 하는 것이 안정성 면에서 좋습니다.\n\n요추전만 : 허리를 지지해주는 의자에 요추전만을 유지하고 앉는다.\n다리 벌리기: 요추전만이 무너지지 않고, 상체의 힘이 많이 들어가지 않는 범위와 저중량으로 수행한다.\n8~15회 3세트 수행한다.\n천천히 수행하고 세트간 1~2분 휴식한다.\n근피로가 느껴지면 멈추며, 고중량 혹은 고반복을 사용하여 수축불능이 올때까지 하면 안된다.\n\n\n\n\n시티드로우를 통한 광배근 강화 (Seated row - Lattisimus dorsi strengthening)\n\n\n❗욕심내어 광배근 전범위를 사용하여 운동하려고 허리를 사용하지 않는다.\n\n\n\n\n\n\n\n\n\n\n올바른 방법\n잘못된 방법\n\n\n\n\n\n\n\n\n\n\n\n요추전만 : 체간을 지지해주는 의자에 기대어 요추전만을 유지하고 앉는다.\n노젓기 운동 : 상체가 앞뒤로 움직이지 않도록 광배근의 제한된 범위만을 사용하여 케이블 혹은 밴드를 당겼다가 천천히 놓는다.\n8~15회 3세트 수행한다.\n천천히 수행하고 세트간 1~2분 휴식한다.\n근피로, 고중량 및 고반복을 피한다."
+  },
+  {
+    "objectID": "posts/202403APIkey/index.html",
+    "href": "posts/202403APIkey/index.html",
+    "title": "ChatGPT 를 옵시디언에서 사용하기",
+    "section": "",
+    "text": "1. 서론\nChatGPT 는 두 가지 유료 정책을 가지고 있다. GPT플러스를 구독해서 사용하는 방법과 API Key를 사용하는 방법이다.\n\nAPI key 란?\n\n\nAPI 키는 응용 프로그램 프로그래밍 인터페이스(API)에 대한 액세스 권한을 부여하는 코드입니다. 이것은 일종의 패스워드로, 사용자나 프로그램이 API를 활용하여 특정 기능을 사용하거나 데이터에 접근할 수 있게 해줍니다.\n\n전자는 22달러 정기 결제를 사용해야 하는 방법이다. 사용하지 않아도 매달 정액제로 돈을 낸다.\n대신 ‘DALLE’같은 이미지생성AI, ’나의 GPTs’ 와 ’GPT스토어’를 사용할 수 있다.\n반대로 API key는 사용한만큼 돈을 내는 방법이다. 사용 설정을 하려면 chat.openai.com 이 아니라 platform.openai.com에서 키를 만들어야한다.\n다만, 24년 3월 부터 미리 선결제하고 차감하는 방식으로 바뀌었다.\n가격정책은 GPT-4의 경우 24년 3월 기준 백만 Token(토큰)당 30달러라고 되어 있다. 대략 영어 4 글자가 1 토큰이므로 1글자 당 0.0000075달러라고 할 수 있다. 한글은 좀 더 토큰화 효율이 안 좋다고 한다.\n\n토큰(Token) 이란?\n\n\nGPT 모델에서의 토큰은 일상 언어에서 사용하는 단어나 문장 부호와 같은 것을 더 작은 단위로 쪼갠 것을 의미합니다.\n\n토큰들은 AI 언어 모델이 활용하기 쉽도록 쪼개놓은 글자 조각이며, 질문의 텍스트가 토큰으로 변환되어 다음 토큰을 예측하여 응답을 생성하는 방식으로 작동합니다.\n대략 번역과 정보검색 정도로 열흘 사용하고 현재 1달러 정도가 차감되었다. 기능에 비해 그렇게 비싼 가격은 아닐 수 있지만, GPT-3.5 turbo의 경우 백만 토큰당 0.5달러이기 때문에.. 정말로 걱정없이 사용할 수 있다. 캐주얼한 사용에는 3.5도 괜찮은 것 같다.\n\n\n\n2. 방법\n\nplatform.openai.com 접속\nAPI keys -&gt; Create new secret key\n\n첫 생성 시에만 확인 가능하니 메모장에 잘 복사해 놓는 것이 좋다.\n\nObsidian -&gt; community plugin -&gt; text generator 설치\nText generator LLM setting -&gt; OpenAIChat 선택 / API key에 복사한 openai API key 붙여넣기\n\n기본 단축키는 윈도우 기준 Ctrl + J.\n원하는 템플레잇을 만들고 Ctrl + Shift + J 로 템플레잇을 선택해서, 메일작성 / 개요작성 / 리뷰에 어울리는 어투로 다듬기 / 번역 등을 할 수 있다.\n\n\n\n\n3. 결론\n\n‘GPTstore’ 활용, ’나만의 GPT’를 fine tuning, DallE로 이미지생성을 즐기려면 GPT PLUS 구독\n마크다운 기반의 문서 편집을 하는 도중에 즉시적인 GPT를 사용하기 위해서는 선결제 방식의 API key 사용"
   }
 ]
