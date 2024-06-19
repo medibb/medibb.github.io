@@ -655,7 +655,7 @@
     "href": "04blog.html",
     "title": "Blog",
     "section": "",
-    "text": "RESEARCH TOPICS\n\n\n\n\n\n\nMOC\n\n\nresearch\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\n\n\n\n\n\n\nChatGPT 를 옵시디언에서 사용하기\n\n\n\n\n\n\nChatGPT\n\n\nAPI\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\nNo matching items"
+    "text": "NAS에서 포트에 기할당된 서비스 삭제하기\n\n\n\n\n\n\nNAS\n\n\nsynology\n\n\nportforwading\n\n\ncontainer\n\n\n\n\n\n\n\n\n\nMay 19, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\n\n\n\n\n\n\nRESEARCH TOPICS\n\n\n\n\n\n\nMOC\n\n\nresearch\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\n\n\n\n\n\n\nChatGPT 를 옵시디언에서 사용하기\n\n\n\n\n\n\nChatGPT\n\n\nAPI\n\n\n\n\n\n\n\n\n\nMar 30, 2024\n\n\nJaehyun Lee\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -1237,5 +1237,12 @@
     "title": "ChatGPT 를 옵시디언에서 사용하기",
     "section": "",
     "text": "1. 서론\nChatGPT 는 두 가지 유료 정책을 가지고 있다. GPT플러스를 구독해서 사용하는 방법과 API Key를 사용하는 방법이다.\n\nAPI key 란?\n\n\nAPI 키는 응용 프로그램 프로그래밍 인터페이스(API)에 대한 액세스 권한을 부여하는 코드입니다. 이것은 일종의 패스워드로, 사용자나 프로그램이 API를 활용하여 특정 기능을 사용하거나 데이터에 접근할 수 있게 해줍니다.\n\n전자는 22달러 정기 결제를 사용해야 하는 방법이다. 사용하지 않아도 매달 정액제로 돈을 낸다.\n대신 ‘DALLE’같은 이미지생성AI, ’나의 GPTs’ 와 ’GPT스토어’를 사용할 수 있다.\n반대로 API key는 사용한만큼 돈을 내는 방법이다. 사용 설정을 하려면 chat.openai.com 이 아니라 platform.openai.com에서 키를 만들어야한다.\n다만, 24년 3월 부터 미리 선결제하고 차감하는 방식으로 바뀌었다.\n가격정책은 GPT-4의 경우 24년 3월 기준 백만 Token(토큰)당 30달러라고 되어 있다. 대략 영어 4 글자가 1 토큰이므로 1글자 당 0.0000075달러라고 할 수 있다. 한글은 좀 더 토큰화 효율이 안 좋다고 한다.\n\n토큰(Token) 이란?\n\n\nGPT 모델에서의 토큰은 일상 언어에서 사용하는 단어나 문장 부호와 같은 것을 더 작은 단위로 쪼갠 것을 의미합니다.\n\n토큰들은 AI 언어 모델이 활용하기 쉽도록 쪼개놓은 글자 조각이며, 질문의 텍스트가 토큰으로 변환되어 다음 토큰을 예측하여 응답을 생성하는 방식으로 작동합니다.\n대략 번역과 정보검색 정도로 열흘 사용하고 현재 1달러 정도가 차감되었다. 기능에 비해 그렇게 비싼 가격은 아닐 수 있지만, GPT-3.5 turbo의 경우 백만 토큰당 0.5달러이기 때문에.. 정말로 걱정없이 사용할 수 있다. 캐주얼한 사용에는 3.5도 괜찮은 것 같다.\n\n\n\n2. 방법\n\nplatform.openai.com 접속\nAPI keys -&gt; Create new secret key\n\n첫 생성 시에만 확인 가능하니 메모장에 잘 복사해 놓는 것이 좋다.\n\nObsidian -&gt; community plugin -&gt; text generator 설치\nText generator LLM setting -&gt; OpenAIChat 선택 / API key에 복사한 openai API key 붙여넣기\n\n기본 단축키는 윈도우 기준 Ctrl + J.\n원하는 템플레잇을 만들고 Ctrl + Shift + J 로 템플레잇을 선택해서, 메일작성 / 개요작성 / 리뷰에 어울리는 어투로 다듬기 / 번역 등을 할 수 있다.\n\n\n\n\n3. 결론\n\n‘GPTstore’ 활용, ’나만의 GPT’를 fine tuning, DallE로 이미지생성을 즐기려면 GPT PLUS 구독\n마크다운 기반의 문서 편집을 하는 도중에 즉시적인 GPT를 사용하기 위해서는 선결제 방식의 API key 사용"
+  },
+  {
+    "objectID": "posts/20240519NAS/index.html",
+    "href": "posts/20240519NAS/index.html",
+    "title": "NAS에서 포트에 기할당된 서비스 삭제하기",
+    "section": "",
+    "text": "1. 나스 접속\n\nwindow powershell 에서 ssh 포트가 활성화된 나스에 접속\n\nssh [나스ID]@[나스할당내부IP] -p [ssh포트번호]\n나스비밀번호 입력\n\n\n\n\n2. 포트 확인\n\n새로 사용하고 싶은 포트번호에 할당된 서비스 확인\nnetstat -tulnp | grep [포트번호]입력\n\npermission 제한 오류 뜨는 경우 앞에 sudo 붙여서 사용\n\n다음과 같은 결과에서 프로세스ID 확인\n\ntcp 0 0 0.0.0.0:[포트번호] 0.0.0.0:* LISTEN [프로세스ID]/[할당된 서비스]\n\n\n\n\n3. 프로세스 (강제) 종료\n\nkill [프로세스ID] 혹은 kill -9 [프로세스ID] (강제종료)\n\n\n\n4. 새 서비스 할당\n\n해당포트에 새로운 서비스 포트포워딩 및 시작\n(필요시) 리디렉션 수정\n\n이전 서비스에서 리디렉션을 하고 있었으면 이전 서비스 수정 혹은 브라우저 캐시 삭제\n\n\n\n\n5. Comment\n시놀로지 카페에서도 제대로 답을 못들었던 케이스를 글로 남겨 놓은 것.\n사건 발단은 파이썬 딥러닝 수업 중 내가 모르게 깔린 라이브러리 중에 dask 서비스가 있었던 것.\n이게 자동으로 이전에 사용되던 포트를 덮어버렸다.\ndask는 멀티코어로 병렬처리를 도와주는 파이썬 라이브러리..라고 하는데 처음 알았다.\n홈페이지 관리가 막혀버려서, 환자와 PA 교육에 사용하는 사이트 업데이트가 불가능해 져서 꽤나 큰일이었는데, 시놀로지 카페에 답을 구해도 잘 모르겠더라. 답을 못들었고 들어도 무슨얘긴지 모르겠고..\n하지만, ChatGPT-4o랑 대화해서 한방에 해결되었다. 역시 갓GPT.."
   }
 ]
