@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>album – Jaehyun Lee MD</title>
+<title>Materials – Jaehyun Lee MD</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -66,7 +68,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -74,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -97,11 +157,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Academic Activities</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./03album.html" aria-current="page"> 
+    <a class="nav-link" href="./03album.html"> 
 <span class="menu-text">Album</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./materials.html"> 
+    <a class="nav-link active" href="./materials.html" aria-current="page"> 
 <span class="menu-text">Materials</span></a>
   </li>  
 </ul>
@@ -129,214 +189,102 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Materials</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
 
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">2024</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">2023</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">2022</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">2021</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">~ 2020</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<section id="대한미세침습통증연구회-2024년-제-4회-카데바워크숍-2024-06-30" class="level2">
-<h2 class="anchored" data-anchor-id="대한미세침습통증연구회-2024년-제-4회-카데바워크숍-2024-06-30">대한미세침습통증연구회 2024년 제 4회 카데바워크숍 (2024-06-30)</h2>
-<p><img src="image/20240630.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한신경근골격초음파학회-2024년-제-1회-핸즈온워크숍-2024-05-25" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격초음파학회-2024년-제-1회-핸즈온워크숍-2024-05-25">대한신경근골격초음파학회 2024년 제 1회 핸즈온워크숍 (2024-05-25)</h2>
-<p><img src="image/2024052501.jpg" class="img-fluid" width="578"> <img src="image/2024052502.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="서울대학교병원-전임의-동기모임-2024-04-05" class="level2">
-<h2 class="anchored" data-anchor-id="서울대학교병원-전임의-동기모임-2024-04-05">서울대학교병원 전임의 동기모임 (2024-04-05)</h2>
-<p><img src="image/20240405.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한재활의학회-2024년-춘계학술대회-cpg-session-2024-04-05" class="level2">
-<h2 class="anchored" data-anchor-id="대한재활의학회-2024년-춘계학술대회-cpg-session-2024-04-05">대한재활의학회 2024년 춘계학술대회 ; CPG session (2024-04-05)</h2>
-<p><img src="image/20240405_1.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한임상통증학회-2024년-춘계학술대회-2024-03-16" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2024년-춘계학술대회-2024-03-16">대한임상통증학회 2024년 춘계학술대회 (2024-03-16)</h2>
-<p><img src="image/20240316.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="부산대학교병원-retreat-2024-02-15" class="level2">
-<h2 class="anchored" data-anchor-id="부산대학교병원-retreat-2024-02-15">부산대학교병원 Retreat (2024-02-15)</h2>
-<p><img src="image/20240215.jpg" class="img-fluid" width="578"></p>
-</section>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<section id="국산-의료기기를-이용한-대한신경근골격초음파학회-2023년-제-3회-핸즈온-워크숍-2023-09-09" class="level2">
-<h2 class="anchored" data-anchor-id="국산-의료기기를-이용한-대한신경근골격초음파학회-2023년-제-3회-핸즈온-워크숍-2023-09-09">국산 의료기기를 이용한 대한신경근골격초음파학회 2023년 제 3회 핸즈온 워크숍 (2023-09-09)</h2>
-<p><img src="image/20230909.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한신경근골격초음파학회-2023년-제-2회-핸즈온-워크숍-2023-07-15" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격초음파학회-2023년-제-2회-핸즈온-워크숍-2023-07-15">대한신경근골격초음파학회 2023년 제 2회 핸즈온 워크숍 (2023-07-15)</h2>
-<p><img src="image/20230715_2.jpg" class="img-fluid" width="578"> <img src="image/20230715.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한재활의학회-2023년-하계연수강좌-2023-06-11" class="level2">
-<h2 class="anchored" data-anchor-id="대한재활의학회-2023년-하계연수강좌-2023-06-11">대한재활의학회 2023년 하계연수강좌 (2023-06-11)</h2>
-<p><img src="image/20230611.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한류마티스학회-2023년-연수강좌-2023-03-25" class="level2">
-<h2 class="anchored" data-anchor-id="대한류마티스학회-2023년-연수강좌-2023-03-25">대한류마티스학회 2023년 연수강좌 (2023-03-25)</h2>
-<p><img src="image/화면 캡처 2023-04-06 113805.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한임상통증학회-2023년-춘계학술대회-2023-03-18" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2023년-춘계학술대회-2023-03-18">대한임상통증학회 2023년 춘계학술대회 (2023-03-18)</h2>
-<p><img src="image/화면 캡처 2023-04-06 113225.png" class="img-fluid" width="578"></p>
-</section>
-<section id="physiatry-23-association-of-academic-physiatrist-2023-02-21-24" class="level2">
-<h2 class="anchored" data-anchor-id="physiatry-23-association-of-academic-physiatrist-2023-02-21-24">Physiatry ’23 (Association of Academic Physiatrist) (2023-02-21 ~ 24)</h2>
-<p><img src="image/1677123826607.jpg" class="img-fluid" width="578"> <img src="image/1677179475196.jpg" class="img-fluid" width="578"> <img src="image/TY0SL7-20230222191024517143964.jpg" class="img-fluid" width="578"><br>
-</p>
-</section>
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<section id="대한신경근골격초음파학회-2022년-추계학술대회-2022-11-05" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격초음파학회-2022년-추계학술대회-2022-11-05">대한신경근골격초음파학회 2022년 추계학술대회 (2022-11-05)</h2>
-<p><img src="image/AF1QipMXwjFm8My7zH2N3qI9IXXXsTryMJf5PS61JfMb=w4032-h3024.jpg" class="img-fluid" width="578"> <img src="image/AF1QipOmIFXio-ffqSGpqZkIagO_y7iF3by8PgDX-0Nj=w3024-h4032.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한재활의학회-50주년-추계국제학술대회-2022-10-28-29" class="level2">
-<h2 class="anchored" data-anchor-id="대한재활의학회-50주년-추계국제학술대회-2022-10-28-29">대한재활의학회 50주년 추계국제학술대회 (2022-10-28 ~ 29)</h2>
-<p><img src="image/20221028_151750.jpg" class="img-fluid" width="578"> <img src="image/20221031_105333211.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한신경근골격초음파학회-2022년-제-3회-핸즈온-워크숍-2022-09-03" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격초음파학회-2022년-제-3회-핸즈온-워크숍-2022-09-03">대한신경근골격초음파학회 2022년 제 3회 핸즈온 워크숍 (2022-09-03)</h2>
-<p><img src="image/AF1QipMJAOYMqUUvmklrg2RYC1r7A9LLHxKRAoWRESiw=w4032-h3024.jpg" class="img-fluid" width="578"> <img src="image/AF1QipMSAWdbtqV5vBOA50Bqb3J9GT4wGBwEXsOMg2fF=w3024-h4032.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="년-한국의지보조기학회-춘계학술대회-2022-05-28" class="level2">
-<h2 class="anchored" data-anchor-id="년-한국의지보조기학회-춘계학술대회-2022-05-28">2022년 한국의지·보조기학회 춘계학술대회 (2022-05-28)</h2>
-<p><img src="image/1부.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한신경근골격-초음파학회-2022년-제-1회-핸즈온-워크숍-2022-04-30" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격-초음파학회-2022년-제-1회-핸즈온-워크숍-2022-04-30">대한신경근골격 초음파학회 2022년 제 1회 핸즈온 워크숍 (2022-04-30)</h2>
-<p><img src="image/image (2).png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한임상통증학회-2022-춘계학술대회-2022-03-26" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2022-춘계학술대회-2022-03-26">대한임상통증학회 2022 춘계학술대회 (2022-03-26)</h2>
-<p><img src="image/20220326.png" class="img-fluid" width="578"></p>
-</section>
-<section id="knn-건강365-2022-01-26-석회성건염편" class="level2">
-<h2 class="anchored" data-anchor-id="knn-건강365-2022-01-26-석회성건염편">KNN 건강365 (2022-01-26) : 석회성건염편</h2>
-<p>https://youtu.be/V0JdGLBu3Po</p>
-</section>
-<section id="knn-건강365-2022-01-20-목디스크편" class="level2">
-<h2 class="anchored" data-anchor-id="knn-건강365-2022-01-20-목디스크편">KNN 건강365 (2022-01-20) : 목디스크편</h2>
-<p><img src="image/image (1).png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한신경근골격-초음파학회-2021-2022년-제2회-핸즈온-워크숍-2022-01-14-15" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격-초음파학회-2021-2022년-제2회-핸즈온-워크숍-2022-01-14-15">대한신경근골격 초음파학회 2021-2022년 제2회 핸즈온 워크숍 (2022-01-14 ~ 15)</h2>
-<p><img src="image/KakaoTalk_20220120_120136958.jpg" class="img-fluid" width="578"> <img src="image/KakaoTalk_Moim_4QWnQkfdCpakmb9D2ty7q21skDL7Zr.jpg" class="img-fluid" width="578"></p>
-</section>
-</div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
-<section id="대한임상통증학회-2021-온라인리뷰코스-2021-12-04" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2021-온라인리뷰코스-2021-12-04">대한임상통증학회 2021 온라인리뷰코스 (2021-12-04)</h2>
-<p><img src="image/AF1QipON5Jlt9c3LLgCf5533SSL2EUMf4s4GqZjV9yHd=w2400-h1080.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="삼성메디슨주-msk-세미나-강연-후-교수님들과-2021-11-27" class="level2">
-<h2 class="anchored" data-anchor-id="삼성메디슨주-msk-세미나-강연-후-교수님들과-2021-11-27">삼성메디슨(주) MSK 세미나 강연 후 교수님들과 (2021-11-27)</h2>
-<p><img src="image/KakaoTalk_20211213_100636273.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한재활의학회-부산울산경남지회-제-150차-집담회-2021-11-25" class="level2">
-<h2 class="anchored" data-anchor-id="대한재활의학회-부산울산경남지회-제-150차-집담회-2021-11-25">대한재활의학회 부산울산경남지회 제 150차 집담회 (2021-11-25)</h2>
-<p><img src="image/20211125.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한재활의학회-부산울산경남지회-제-148차-집담회-2021-7-15" class="level2">
-<h2 class="anchored" data-anchor-id="대한재활의학회-부산울산경남지회-제-148차-집담회-2021-7-15">대한재활의학회 부산울산경남지회 제 148차 집담회 (2021-7-15)</h2>
-<p><img src="image/image (4).png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한임상통증학회-2021-춘계학술대회-2021-03-27" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2021-춘계학술대회-2021-03-27">대한임상통증학회 2021 춘계학술대회 (2021-03-27)</h2>
-<p><img src="image/AF1QipMyyeA9bEJLaPaoeyCEoYu-sMi93plsHXfC7mE6=w1080-h1440.jpg" class="img-fluid" width="578"></p>
-</section>
-</div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
-<section id="대한임상통증학회-2020-온라인-리뷰코스-2020-12-05" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2020-온라인-리뷰코스-2020-12-05">대한임상통증학회 2020 온라인 리뷰코스 (2020-12-05)</h2>
-<p><img src="image/20201205.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한임상통증학회-2020-추계학술대회-2020-11-14" class="level2">
-<h2 class="anchored" data-anchor-id="대한임상통증학회-2020-추계학술대회-2020-11-14">대한임상통증학회 2020 추계학술대회 (2020-11-14)</h2>
-<p><img src="image/20201114.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한골대사학회-부울경지회-제-4차-온오프라인-학술대회-및-연수강좌-2020-10-24" class="level2">
-<h2 class="anchored" data-anchor-id="대한골대사학회-부울경지회-제-4차-온오프라인-학술대회-및-연수강좌-2020-10-24">대한골대사학회 부울경지회 제 4차 온오프라인 학술대회 및 연수강좌 (2020-10-24)</h2>
-<p><img src="image/20201024.png" class="img-fluid" width="578"></p>
-</section>
-<section id="knn-웰빙라이프-2020-10-122020-10-17" class="level2">
-<h2 class="anchored" data-anchor-id="knn-웰빙라이프-2020-10-122020-10-17">KNN 웰빙라이프 (2020-10-12~2020-10-17)</h2>
-<p>: 근골격계 질환의 잘못된 상식과 원인 및 재활치료 <img src="image/image (3).png" class="img-fluid" width="578"></p>
-</section>
-<section id="knn-공개클리닉-웰---만성질환편-2019-12-14" class="level2">
-<h2 class="anchored" data-anchor-id="knn-공개클리닉-웰---만성질환편-2019-12-14">KNN 공개클리닉 웰 - 만성질환편 (2019-12-14)</h2>
-<p>www.knn.co.kr/198038?bf_cat=25 <img src="image/20191214.png" class="img-fluid" width="578"></p>
-</section>
-<section id="aanem-austin-tx-2019-10-18" class="level2">
-<h2 class="anchored" data-anchor-id="aanem-austin-tx-2019-10-18">AANEM, Austin, TX (2019-10-18)</h2>
-<p><img src="image/EmbeddedImage (3).jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="제-3회-핑크하트-유방암환우-건강강좌-2019-04-12" class="level2">
-<h2 class="anchored" data-anchor-id="제-3회-핑크하트-유방암환우-건강강좌-2019-04-12">제 3회 핑크하트 유방암환우 건강강좌 (2019-04-12)</h2>
-<p><img src="image/20190412.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한신경근골격초음파학회-최우수구연상-2019-04-06" class="level2">
-<h2 class="anchored" data-anchor-id="대한신경근골격초음파학회-최우수구연상-2019-04-06">대한신경근골격초음파학회, 최우수구연상 (2019-04-06)</h2>
-<p>(Related article: http://health.chosun.com/healthcarenews/sa239/2019/04/19/sa23920190419175206675.html) <img src="image/EmbeddedImage (2).jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="정선근-교수님과-마지막-lab-meeting-기념-2019-02-27" class="level2">
-<h2 class="anchored" data-anchor-id="정선근-교수님과-마지막-lab-meeting-기념-2019-02-27">정선근 교수님과 마지막 Lab meeting 기념 (2019-02-27)</h2>
-<p><img src="image/20190227.png" class="img-fluid" width="578"></p>
-</section>
-<section id="정선근-교수님과-마지막-spine-intervention-기념-2019-02-15" class="level2">
-<h2 class="anchored" data-anchor-id="정선근-교수님과-마지막-spine-intervention-기념-2019-02-15">정선근 교수님과 마지막 Spine intervention 기념 (2019-02-15)</h2>
-<p><img src="image/20190215.png" class="img-fluid" width="578"></p>
-</section>
-<section id="orthopaedic-summit-evolving-technique-podium-presentation-las-vegas-nv-2018-12-08" class="level2">
-<h2 class="anchored" data-anchor-id="orthopaedic-summit-evolving-technique-podium-presentation-las-vegas-nv-2018-12-08">Orthopaedic Summit Evolving Technique, podium presentation, Las Vegas, NV (2018-12-08)</h2>
-<p><img src="image/20181208.png" class="img-fluid" width="578"></p>
-</section>
-<section id="google-nest-김기원-교수님-방문-paloalto-ca-2018-12-04" class="level2">
-<h2 class="anchored" data-anchor-id="google-nest-김기원-교수님-방문-paloalto-ca-2018-12-04">Google Nest 김기원 교수님 방문, Paloalto, CA (2018-12-04)</h2>
-<p><img src="image/20181204.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한재활의학회-2018-추계학술대회-2018-10-26" class="level2">
-<h2 class="anchored" data-anchor-id="대한재활의학회-2018-추계학술대회-2018-10-26">대한재활의학회 2018 추계학술대회 (2018-10-26)</h2>
-<p><img src="image/20181026.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="서울대학교-의과대학-재활의학교실-연수강좌-2018-08-25" class="level2">
-<h2 class="anchored" data-anchor-id="서울대학교-의과대학-재활의학교실-연수강좌-2018-08-25">2018 서울대학교 의과대학 재활의학교실 연수강좌 (2018-08-25)</h2>
-<p><img src="image/EmbeddedImage (4).jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="평안교회-건강강좌-2018-05-30" class="level2">
-<h2 class="anchored" data-anchor-id="평안교회-건강강좌-2018-05-30">평안교회 건강강좌 (2018-05-30)</h2>
-<p><img src="image/EmbeddedImage.jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="강남시그넘하우스-건강강좌-2018-05-24" class="level2">
-<h2 class="anchored" data-anchor-id="강남시그넘하우스-건강강좌-2018-05-24">강남시그넘하우스 건강강좌 (2018-05-24)</h2>
-<p><img src="image/EmbeddedImage (1).jpg" class="img-fluid" width="578"></p>
-</section>
-<section id="대한공중보건의사협의회-이취임식-2018-02-23" class="level2">
-<h2 class="anchored" data-anchor-id="대한공중보건의사협의회-이취임식-2018-02-23">대한공중보건의사협의회 이취임식 (2018-02-23)</h2>
-<p><img src="image/20180223.png" class="img-fluid" width="578"></p>
-</section>
-<section id="대한공중보건의사협의회-초음파-workshop-2017-12-08" class="level2">
-<h2 class="anchored" data-anchor-id="대한공중보건의사협의회-초음파-workshop-2017-12-08">대한공중보건의사협의회 초음파 Workshop (2017-12-08)</h2>
-<p><img src="image/20171208.png" class="img-fluid" width="578"></p>
-</section>
-</div>
-</div>
-</div>
 
 
 
-</main> <!-- /main -->
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1716163200000" data-listing-file-modified-sort="1723042256509" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2218">
+<div class="thumbnail">
+<p><a href="./materials/PT/PT.html" class="no-external"></a></p><a href="./materials/PT/PT.html" class="no-external">
+<p class="card-img-top"><img src="materials/PT/PT_exercise/1_1_lordosis.png"  class="thumbnail-image card-img"/></p>
+</a><p><a href="./materials/PT/PT.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./materials/PT/PT.html" class="no-external">2024 PT실 운동교육자료</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./materials/PT/PT.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="./materials/PT/PT.html" class="no-external">목표: 요추안정화, 요추 운동조절능력 향상</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./materials/PT/PT.html" class="no-external">
+<div class="listing-date">
+May 20, 2024
+</div>
+<div class="listing-author">
+재활의학과 조교수 이재현
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1714435200000" data-listing-file-modified-sort="1723041202840" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2383">
+<div class="thumbnail">
+<p><a href="./materials/PA/PA.html" class="no-external"></a></p><a href="./materials/PA/PA.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./materials/PA/PA.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./materials/PA/PA.html" class="no-external">2024 PA 업무자료</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./materials/PA/PA.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="./materials/PA/PA.html" class="no-external">스케줄</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./materials/PA/PA.html" class="no-external">
+<div class="listing-date">
+Apr 30, 2024
+</div>
+<div class="listing-author">
+재활의학과 이재현
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
