@@ -12,5 +12,12 @@
       "/materials/PA/PA.html",
       "/materials/PT/PT.html"
     ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/20240519NAS/index.html",
+      "/posts/202403APIkey/index.html"
+    ]
   }
 ]
