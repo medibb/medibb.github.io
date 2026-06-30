@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>당직 일정 생성기</title>
+<style>
+  :root { --bd:#d9dee5; --bg:#f6f8fa; --accent:#2563eb; --weekend:#fff4f4; --warn:#b91c1c; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+         margin: 0; padding: 24px; background: var(--bg); color: #1a1f24; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color:#5b6671; font-size: 13px; margin-bottom: 20px; }
+  .card { background:#fff; border:1px solid var(--bd); border-radius:10px; padding:18px; margin-bottom:18px; }
+  .card h2 { font-size:15px; margin:0 0 12px; }
+  label { font-size: 13px; color:#3a444e; }
+  input[type=number], input[type=text] { padding:7px 9px; border:1px solid var(--bd); border-radius:6px; font-size:14px; }
+  table { border-collapse: collapse; width:100%; font-size:14px; }
+  th, td { border:1px solid var(--bd); padding:6px 8px; text-align:center; }
+  th { background:#eef1f4; font-weight:600; }
+  .people-table td, .people-table th { text-align:left; }
+  .people-table input { width:100%; }
+  .row-period { display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; }
+  .fld { display:flex; flex-direction:column; gap:4px; }
+  button { cursor:pointer; border:1px solid var(--bd); background:#fff; padding:8px 14px; border-radius:6px; font-size:14px; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  button.ghost { color:var(--accent); }
+  button.del { color:var(--warn); border:none; background:transparent; font-size:18px; padding:2px 8px; }
+  .btnbar { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; align-items:center; }
+  .sat { background:#eef4ff; }
+  .sun, .weekend { background:var(--weekend); }
+  .empty { background:#fff1f1; color:var(--warn); font-weight:600; }
+  .hint { font-size:12px; color:#6b7680; margin-top:6px; }
+  .warnbox { background:#fff4f4; border:1px solid #f3c0c0; color:var(--warn); padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:14px; }
+  .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+  @media (max-width:780px){ .grid2 { grid-template-columns:1fr; } }
+  .copied { color:#15803d; font-size:13px; margin-left:4px; }
+  .countbar { display:inline-block; height:10px; background:var(--accent); border-radius:5px; vertical-align:middle; }
+  code { background:#eef1f4; padding:1px 5px; border-radius:4px; }
+  textarea { width:100%; border:1px solid var(--bd); border-radius:6px; padding:8px; font-family:ui-monospace,Menlo,monospace; font-size:12px; }
+  .saved-item { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px dashed var(--bd); font-size:14px; }
+  .saved-item .nm { flex:1; }
+  .tag { background:#eef1f4; border-radius:5px; padding:2px 7px; font-size:12px; color:#3a444e; }
+</style>
+</head>
+<body>
+  <h1>📅 당직 일정 생성기</h1>
+  <div class="sub">하루 1명 · 불가일 제외 · 횟수 균등 · 연속 당직 방지(불가피 시 허용) · 다음 달 이월</div>
+
+  <div class="card">
+    <h2>1. 기간</h2>
+    <div class="row-period">
+      <div class="fld"><label>연도</label><input type="number" id="year" style="width:100px"></div>
+      <div class="fld"><label>월</label><input type="number" id="month" min="1" max="12" style="width:80px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 당직자</h2>
+    <table class="people-table">
+      <thead>
+        <tr>
+          <th style="width:24%">이름</th>
+          <th style="width:46%">불가일 (예: <code>3, 5, 10-12</code>)</th>
+          <th style="width:20%">이월값 (지난달)</th>
+          <th style="width:10%"></th>
+        </tr>
+      </thead>
+      <tbody id="peopleBody"></tbody>
+    </table>
+    <div class="btnbar">
+      <button class="ghost" id="addPerson">+ 당직자 추가</button>
+    </div>
+    <div class="hint">불가일은 "일(day)" 숫자만 입력합니다. 콤마와 범위(<code>-</code>)를 섞어 쓸 수 있어요. · 이월값은 보통 비워두고(0), 일정 생성 후 "다음 달 준비" 버튼을 쓰면 자동으로 채워집니다.</div>
+  </div>
+
+  <div class="btnbar">
+    <button class="primary" id="generate">일정 생성</button>
+    <button id="resetCarry">이월값 모두 0</button>
+  </div>
+
+  <div id="output"></div>
+
+  <div class="card" id="savedCard" style="display:none">
+    <h2>💾 저장된 일정</h2>
+    <div id="savedList"></div>
+  </div>
+
+<script>
+const KO_DOW = ["일","월","화","수","목","금","토"];
+const LS_PEOPLE = 'duty_people_v1';
+const LS_SAVED  = 'duty_saved_v1';
+
+function nextMonth(){
+  const d = new Date();
+  let y = d.getFullYear(), m = d.getMonth()+2;
+  if (m > 12){ m -= 12; y += 1; }
+  return {y, m};
+}
+
+function addPersonRow(name="", unavail="", carry=0){
+  const tb = document.getElementById('peopleBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="p-name" value="${escAttr(name)}" placeholder="이름"></td>
+    <td><input type="text" class="p-unavail" value="${escAttr(unavail)}" placeholder="예: 3, 5, 10-12"></td>
+    <td><input type="number" class="p-carry" value="${carry}" step="1"></td>
+    <td><button class="del" title="삭제">✕</button></td>`;
+  tr.querySelector('.del').onclick = () => { tr.remove(); savePeople(); };
+  tr.querySelectorAll('input').forEach(i => i.addEventListener('change', savePeople));
+  tb.appendChild(tr);
+}
+function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+function parseUnavail(str, daysInMonth){
+  const set = new Set(); const bad = [];
+  if(!str) return {set, bad};
+  for(let part of str.split(',')){
+    part = part.trim(); if(!part) continue;
+    const m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+    if(m){
+      let a = +m[1], b = +m[2]; if(a>b)[a,b]=[b,a];
+      for(let d=a; d<=b; d++){ (d>=1&&d<=daysInMonth)?set.add(d):bad.push(d); }
+    } else if(/^\d+$/.test(part)){
+      const d = +part; (d>=1&&d<=daysInMonth)?set.add(d):bad.push(d);
+    } else { bad.push(part); }
+  }
+  return {set, bad};
+}
+
+function readPeople(){
+  return [...document.querySelectorAll('#peopleBody tr')].map(r => ({
+    name: r.querySelector('.p-name').value.trim(),
+    unavailRaw: r.querySelector('.p-unavail').value,
+    carry: parseInt(r.querySelector('.p-carry').value || '0', 10) || 0,
+  })).filter(p => p.name);
+}
+
+// ---- localStorage: 당직자 구성 자동 저장/복원 ----
+function savePeople(){
+  const data = [...document.querySelectorAll('#peopleBody tr')].map(r => ({
+    name: r.querySelector('.p-name').value,
+    unavail: r.querySelector('.p-unavail').value,
+    carry: r.querySelector('.p-carry').value,
+  }));
+  localStorage.setItem(LS_PEOPLE, JSON.stringify(data));
+}
+function loadPeople(){
+  try{ return JSON.parse(localStorage.getItem(LS_PEOPLE)) || null; }catch(e){ return null; }
+}
+
+// ---- localStorage: 생성된 월 일정 저장/조회 ----
+function getSaved(){ try{ return JSON.parse(localStorage.getItem(LS_SAVED)) || {}; }catch(e){ return {}; } }
+function saveMonth(rec){
+  const all = getSaved();
+  all[`${rec.year}-${String(rec.month).padStart(2,'0')}`] = rec;
+  localStorage.setItem(LS_SAVED, JSON.stringify(all));
+  renderSavedList();
+}
+function renderSavedList(){
+  const all = getSaved();
+  const keys = Object.keys(all).sort().reverse();
+  const card = document.getElementById('savedCard');
+  const list = document.getElementById('savedList');
+  if(keys.length === 0){ card.style.display='none'; return; }
+  card.style.display='';
+  list.innerHTML = keys.map(k => {
+    const r = all[k];
+    return `<div class="saved-item">
+      <span class="nm">${r.year}년 ${r.month}월</span>
+      <span class="tag">${r.schedule.filter(s=>s.name).length}건</span>
+      <button onclick="viewMonth('${k}')">보기</button>
+      <button class="del" onclick="deleteMonth('${k}')" title="삭제">✕</button>
+    </div>`;
+  }).join('');
+}
+function deleteMonth(k){
+  const all = getSaved(); delete all[k];
+  localStorage.setItem(LS_SAVED, JSON.stringify(all));
+  renderSavedList();
+}
+function viewMonth(k){
+  const r = getSaved()[k];
+  if(!r) return;
+  renderOutput(r);
+  window.scrollTo({top:document.getElementById('output').offsetTop-20, behavior:'smooth'});
+}
+
+function generate(){
+  const year = parseInt(document.getElementById('year').value,10);
+  const month = parseInt(document.getElementById('month').value,10);
+  const out = document.getElementById('output');
+  out.innerHTML = '';
+  if(!year || !month || month<1 || month>12){ out.innerHTML = warn('연도/월을 올바르게 입력하세요.'); return; }
+
+  const people = readPeople();
+  if(people.length < 2){ out.innerHTML = warn('당직자를 2명 이상 입력하세요.'); return; }
+
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const warnings = [];
+  const state = people.map((p,i) => {
+    const {set, bad} = parseUnavail(p.unavailRaw, daysInMonth);
+    if(bad.length) warnings.push(`${p.name}: 무시된 불가일 입력 → ${bad.join(', ')}`);
+    return { name:p.name, idx:i, unavail:set, count:p.carry, monthCount:0, last:-99, carry:p.carry };
+  });
+
+  const schedule = [];
+  let prevAssignedIdx = -1;
+  for(let day=1; day<=daysInMonth; day++){
+    const dow = new Date(year, month-1, day).getDay();
+    let cand = state.filter(s => !s.unavail.has(day));
+    let chosen = null;
+    if(cand.length === 0){
+      warnings.push(`${month}월 ${day}일: 가능한 당직자가 없어 공석 처리됨.`);
+    } else {
+      let pool = cand;
+      if(cand.length > 1 && prevAssignedIdx !== -1){
+        const filtered = cand.filter(s => s.idx !== prevAssignedIdx);
+        if(filtered.length > 0) pool = filtered;
+      }
+      pool.sort((a,b) => a.count - b.count || a.last - b.last || a.idx - b.idx);
+      chosen = pool[0];
+      chosen.count++; chosen.monthCount++; chosen.last = day;
+      prevAssignedIdx = chosen.idx;
+    }
+    schedule.push({day, dow, name: chosen ? chosen.name : null});
+  }
+
+  // 다음 달 이월값 정규화
+  const finals = state.map(s => s.carry + s.monthCount);
+  const minFinal = Math.min(...finals);
+  const summary = state.map((s,i) => ({ name:s.name, monthCount:s.monthCount, nextCarry: finals[i]-minFinal }));
+
+  const rec = { year, month, schedule, summary, warnings };
+  saveMonth(rec);          // 생성 즉시 저장
+  savePeople();
+  renderOutput(rec);
+}
+
+function warn(msg){ return `<div class="warnbox">⚠️ ${msg}</div>`; }
+
+function renderOutput(rec){
+  const {year, month, schedule, summary, warnings} = rec;
+  const out = document.getElementById('output');
+
+  let html = '';
+  if(warnings && warnings.length){
+    html += `<div class="warnbox">⚠️ 확인 필요<ul style="margin:6px 0 0; padding-left:18px">${warnings.map(w=>`<li>${w}</li>`).join('')}</ul></div>`;
+  }
+
+  // 일정표
+  html += `<div class="card"><h2>${year}년 ${month}월 당직 일정</h2>`;
+  html += `<table><thead><tr><th>날짜</th><th>요일</th><th>당직자</th></tr></thead><tbody>`;
+  for(const r of schedule){
+    const cls = r.dow===0 ? 'sun' : (r.dow===6 ? 'sat' : '');
+    const cell = r.name ? r.name : '— 공석 —';
+    const tdcls = r.name ? '' : 'empty';
+    html += `<tr class="${cls}"><td>${month}/${r.day}</td><td>${KO_DOW[r.dow]}</td><td class="${tdcls}">${cell}</td></tr>`;
+  }
+  html += `</tbody></table>`;
+  html += `<div class="btnbar">
+      <button class="primary" id="copySched">📋 시트용으로 복사 (TSV)</button>
+      <button class="primary" id="prepNext">다음 달 준비 →</button>
+      <span id="copyMsg"></span>
+    </div>`;
+  html += `<div class="hint">복사 후 구글 시트 셀에 붙여넣기(Ctrl+V) 하면 자동으로 칸에 들어갑니다. · "다음 달 준비"는 이월값을 자동 입력하고 월을 +1, 불가일을 비웁니다.</div>`;
+  html += `<details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px">복사가 안 되면 여기서 직접 선택해 복사하세요</summary>
+      <textarea rows="6" id="schedTA" readonly style="margin-top:8px"></textarea></details>`;
+  html += `</div>`;
+
+  // 요약 + 이월
+  const maxMonth = Math.max(1, ...summary.map(s=>s.monthCount));
+  html += `<div class="grid2">`;
+  html += `<div class="card"><h2>이번 달 배정 횟수</h2><table><thead><tr><th>당직자</th><th>횟수</th><th></th></tr></thead><tbody>`;
+  for(const s of summary){
+    const w = Math.round(s.monthCount / maxMonth * 120);
+    html += `<tr><td style="text-align:left">${s.name}</td><td>${s.monthCount}</td><td style="text-align:left"><span class="countbar" style="width:${w}px"></span></td></tr>`;
+  }
+  html += `</tbody></table></div>`;
+
+  html += `<div class="card"><h2>다음 달 이월값</h2><table><thead><tr><th>당직자</th><th>이월값</th></tr></thead><tbody>`;
+  for(const s of summary){
+    html += `<tr><td style="text-align:left">${s.name}</td><td>${s.nextCarry}</td></tr>`;
+  }
+  html += `</tbody></table>
+    <div class="btnbar"><button id="copyCarry">📋 이월값 복사</button><span id="carryMsg"></span></div>
+    <textarea rows="${summary.length+1}" id="carryTA" readonly style="margin-top:8px"></textarea>
+    <div class="hint">"다음 달 준비" 버튼을 누르면 이 값이 입력칸에 자동으로 들어갑니다.</div></div>`;
+  html += `</div>`;
+
+  out.innerHTML = html;
+
+  // 복사용 텍스트
+  const tsv = ['날짜\t요일\t당직자', ...schedule.map(r => `${month}/${r.day}\t${KO_DOW[r.dow]}\t${r.name || ''}`)].join('\n');
+  const carryTSV = summary.map(s => `${s.name}\t${s.nextCarry}`).join('\n');
+  document.getElementById('schedTA').value = tsv;
+  document.getElementById('carryTA').value = carryTSV;
+
+  document.getElementById('copySched').onclick = () => copyText(tsv, 'copyMsg', 'schedTA');
+  document.getElementById('copyCarry').onclick = () => copyText(carryTSV, 'carryMsg', 'carryTA');
+  document.getElementById('prepNext').onclick = () => prepareNextMonth(rec);
+}
+
+// 클립보드 복사 (file:// 환경 fallback 포함)
+function copyText(text, msgId, taId){
+  const ok = () => { document.getElementById(msgId).innerHTML = '<span class="copied">✓ 복사됨</span>'; };
+  const fail = () => {
+    const ta = document.getElementById(taId);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); ok(); }
+    catch(e){ document.getElementById(msgId).innerHTML = '<span class="copied" style="color:#b91c1c">아래 칸에서 직접 복사하세요</span>'; }
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(ok).catch(fail);
+  } else { fail(); }
+}
+
+// 다음 달 준비: 이월값 자동 입력 + 월 +1 + 불가일 비우기
+function prepareNextMonth(rec){
+  const carryByName = {};
+  rec.summary.forEach(s => carryByName[s.name] = s.nextCarry);
+
+  document.querySelectorAll('#peopleBody tr').forEach(tr => {
+    const name = tr.querySelector('.p-name').value.trim();
+    tr.querySelector('.p-unavail').value = '';                       // 불가일 비움
+    if(name in carryByName) tr.querySelector('.p-carry').value = carryByName[name]; // 이월값 입력
+  });
+
+  let y = parseInt(document.getElementById('year').value,10);
+  let m = parseInt(document.getElementById('month').value,10) + 1;
+  if(m > 12){ m = 1; y += 1; }
+  document.getElementById('year').value = y;
+  document.getElementById('month').value = m;
+
+  savePeople();
+  document.getElementById('output').innerHTML =
+    `<div class="warnbox" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
+       ✓ ${y}년 ${m}월 준비 완료 — 이월값이 입력되고 불가일이 비워졌습니다. 새 불가일을 입력한 뒤 <b>일정 생성</b>을 누르세요.</div>`;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// 초기화
+document.getElementById('addPerson').onclick = () => addPersonRow();
+document.getElementById('generate').onclick = generate;
+document.getElementById('resetCarry').onclick = () => {
+  document.querySelectorAll('.p-carry').forEach(i => i.value = 0); savePeople();
+};
+document.getElementById('year').addEventListener('change', savePeople);
+document.getElementById('month').addEventListener('change', savePeople);
+
+(function init(){
+  const {y, m} = nextMonth();
+  document.getElementById('year').value = y;
+  document.getElementById('month').value = m;
+  const saved = loadPeople();
+  if(saved && saved.length){
+    saved.forEach(p => addPersonRow(p.name, p.unavail, p.carry || 0));
+  } else {
+    for(let i=0;i<5;i++) addPersonRow();
+  }
+  renderSavedList();
+})();
+</script>
+</body>
+</html>
