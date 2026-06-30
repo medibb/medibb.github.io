@@ -72,6 +72,25 @@
       <button class="ghost" id="addPerson">+ 당직자 추가</button>
     </div>
     <div class="hint">불가일은 "일(day)" 숫자만 입력합니다. 콤마와 범위(<code>-</code>)를 섞어 쓸 수 있어요. · 이월값은 보통 비워두고(0), 일정 생성 후 "다음 달 준비" 버튼을 쓰면 자동으로 채워집니다.</div>
+
+    <details style="margin-top:14px; border-top:1px solid var(--bd); padding-top:12px">
+      <summary style="cursor:pointer; font-size:14px; font-weight:600; color:var(--accent)">📥 구글 시트에서 불러오기 (선택)</summary>
+      <div style="margin-top:10px">
+        <div class="hint" style="margin-bottom:8px">컬럼 순서: <code>이름 ⟶ 불가일 ⟶ 이월값</code> (이월값은 없으면 생략 가능). 위 명단을 <b>덮어씁니다.</b></div>
+        <label style="font-weight:600">방법 A — 시트에서 복사해 붙여넣기 (가장 안정적)</label>
+        <div class="hint">구글 시트에서 <b>이름·불가일·이월값 칸을 드래그 → Ctrl+C</b> 한 뒤 아래에 붙여넣으세요(헤더 행 있어도 됨).</div>
+        <textarea rows="5" id="importTA" placeholder="홍길동	3, 5, 12	0
+김철수	10-12	1"></textarea>
+        <div class="btnbar"><button id="importPaste">붙여넣기로 채우기</button><span id="importMsg"></span></div>
+
+        <label style="font-weight:600; display:block; margin-top:12px">방법 B — 게시된 시트 CSV 주소에서 불러오기</label>
+        <div class="hint">구글 시트 → 파일 → 공유 → <b>웹에 게시</b> → "취합" 시트 / CSV 선택 → 생성된 링크를 붙여넣으세요.</div>
+        <div class="btnbar" style="margin-top:6px">
+          <input type="text" id="sheetUrl" placeholder="https://docs.google.com/.../pub?gid=...&single=true&output=csv" style="flex:1; min-width:280px">
+          <button id="importUrl">URL에서 불러오기</button><span id="importUrlMsg"></span>
+        </div>
+      </div>
+    </details>
   </div>
 
   <div class="btnbar">
@@ -111,6 +130,59 @@ function addPersonRow(name="", unavail="", carry=0){
   tb.appendChild(tr);
 }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+// ---- 구글 시트 가져오기 ----
+function parseCSVLine(line){
+  const out=[]; let cur=''; let q=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(q){
+      if(ch==='"'){ if(line[i+1]==='"'){cur+='"';i++;} else q=false; }
+      else cur+=ch;
+    } else {
+      if(ch===','){ out.push(cur); cur=''; }
+      else if(ch==='"') q=true;
+      else cur+=ch;
+    }
+  }
+  out.push(cur); return out;
+}
+function parseImport(text){
+  text = (text||'').trim();
+  if(!text) return [];
+  const hasTab = text.includes('\t');           // 시트 복사 = 탭 구분(TSV)
+  const rows = [];
+  for(const line of text.split(/\r?\n/)){
+    if(!line.trim()) continue;
+    let cells = (hasTab ? line.split('\t') : parseCSVLine(line)).map(c=>c.trim());
+    if(/^(이름|name)$/i.test(cells[0])) continue;  // 헤더 건너뜀
+    if(!cells[0]) continue;
+    rows.push({ name: cells[0], unavail: cells[1]||'', carry: parseInt(cells[2]||'0',10)||0 });
+  }
+  return rows;
+}
+function applyImport(rows, msgId){
+  const msg = document.getElementById(msgId);
+  if(!rows.length){ msg.innerHTML = '<span class="copied" style="color:#b91c1c">읽을 데이터가 없습니다</span>'; return; }
+  document.getElementById('peopleBody').innerHTML = '';
+  rows.forEach(r => addPersonRow(r.name, r.unavail, r.carry));
+  savePeople();
+  msg.innerHTML = `<span class="copied">✓ ${rows.length}명 불러옴</span>`;
+}
+async function importFromUrl(){
+  const url = document.getElementById('sheetUrl').value.trim();
+  const msg = document.getElementById('importUrlMsg');
+  if(!url){ return; }
+  msg.textContent = '불러오는 중…';
+  try{
+    const res = await fetch(url);
+    if(!res.ok) throw new Error(res.status);
+    const text = await res.text();
+    applyImport(parseImport(text), 'importUrlMsg');
+  }catch(e){
+    msg.innerHTML = '<span class="copied" style="color:#b91c1c">실패 — 시트가 "웹에 게시"(CSV)로 공개됐는지 확인하세요</span>';
+  }
+}
 
 function parseUnavail(str, daysInMonth){
   const set = new Set(); const bad = [];
@@ -347,6 +419,8 @@ document.getElementById('resetCarry').onclick = () => {
 };
 document.getElementById('year').addEventListener('change', savePeople);
 document.getElementById('month').addEventListener('change', savePeople);
+document.getElementById('importPaste').onclick = () => applyImport(parseImport(document.getElementById('importTA').value), 'importMsg');
+document.getElementById('importUrl').onclick = importFromUrl;
 
 (function init(){
   const {y, m} = nextMonth();
