@@ -99,14 +99,32 @@
   <div id="output"></div>
 
   <div class="card">
-    <h2>☁️ 백업 / 복원 (기기 간 이동)</h2>
-    <div class="hint">이 앱은 <b>브라우저에 저장</b>되어 기기·브라우저마다 따로입니다. 다른 기기로 옮기려면: 한 기기에서 <b>내보내기</b> → 파일을 (카톡/드라이브 등으로) 전달 → 다른 기기에서 <b>가져오기</b>.</div>
-    <div class="btnbar">
-      <button id="exportBtn">⬇️ 내보내기(백업 파일)</button>
-      <button id="importFileBtn">⬆️ 가져오기(복원)</button>
-      <input type="file" id="importFile" accept="application/json,.json" style="display:none">
-      <span id="backupMsg"></span>
+    <h2>☁️ GitHub 저장 / 불러오기 (기기 간 자동 공유)</h2>
+    <div class="hint"><b>불러오기는 토큰 없이</b> 어느 기기에서나 됩니다(공개 저장소). <b>저장할 때만</b> 아래에 토큰이 필요합니다. 저장한 데이터는 <b>공개</b>로 보관됩니다(이름·날짜).</div>
+    <div class="btnbar" style="margin-top:8px">
+      <button class="primary" id="ghLoadBtn">☁️ GitHub에서 불러오기</button>
+      <button class="primary" id="ghSaveBtn">☁️ GitHub에 저장</button>
+      <span id="ghMsg"></span>
     </div>
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer; font-size:14px; font-weight:600; color:var(--accent)">🔑 저장용 토큰 설정 (처음 한 번)</summary>
+      <div style="margin-top:8px">
+        <div class="btnbar" style="margin-top:0">
+          <input type="password" id="ghToken" placeholder="github_pat_... (Contents 쓰기 전용)" style="flex:1; min-width:280px">
+          <label style="display:flex; align-items:center; gap:5px"><input type="checkbox" id="ghRemember"> 이 기기에 저장</label>
+        </div>
+        <div class="hint">GitHub → Settings → Developer settings → <b>Fine-grained tokens</b> → Generate → 저장소 <code>medibb/medibb.github.io</code> 선택 → 권한 <b>Contents: Read and write</b> → 생성한 토큰을 붙여넣기. (넓은 권한의 기존 토큰은 쓰지 마세요.)</div>
+      </div>
+    </details>
+    <details style="margin-top:10px">
+      <summary style="cursor:pointer; font-size:13px">파일로 백업/복원 (오프라인용)</summary>
+      <div class="btnbar">
+        <button id="exportBtn">⬇️ 파일 내보내기</button>
+        <button id="importFileBtn">⬆️ 파일 가져오기</button>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+        <span id="backupMsg"></span>
+      </div>
+    </details>
   </div>
 
   <div class="card" id="savedCard" style="display:none">
@@ -454,34 +472,38 @@ document.getElementById('addHoliday').addEventListener('change', savePeople);
 document.getElementById('manual').addEventListener('change', savePeople);
 document.getElementById('importPaste').onclick = () => applyImport(parseImport(document.getElementById('importTA').value));
 
-// 백업/복원 (JSON 파일)
+// ---- 백업 데이터 묶기/풀기 ----
+function backupData(){ return { _type:'duty-backup', v:3,
+  people: localStorage.getItem(LS_PEOPLE),
+  manual: localStorage.getItem(LS_MANUAL),
+  saved: localStorage.getItem(LS_SAVED) }; }
+function applyBackupObject(d){
+  if(!d || d._type!=='duty-backup') return false;
+  if(d.people != null) localStorage.setItem(LS_PEOPLE, d.people);
+  if(d.manual != null) localStorage.setItem(LS_MANUAL, d.manual);
+  if(d.saved != null){
+    const cur = getSaved();
+    const inc = JSON.parse(d.saved || '{}');
+    localStorage.setItem(LS_SAVED, JSON.stringify({ ...cur, ...inc }));  // 병합(같은 달은 덮어씀)
+  }
+  return true;
+}
+
+// ---- 파일 백업/복원 ----
 function exportBackup(){
-  const data = { _type:'duty-backup', v:3,
-    people: localStorage.getItem(LS_PEOPLE),
-    manual: localStorage.getItem(LS_MANUAL),
-    saved: localStorage.getItem(LS_SAVED) };
-  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const blob = new Blob([JSON.stringify(backupData(),null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'duty-backup.json'; a.click();
+  const a = document.createElement('a'); a.href=url; a.download='duty-backup.json'; a.click();
   URL.revokeObjectURL(url);
-  document.getElementById('backupMsg').innerHTML = '<span class="copied">✓ 내보냄 (duty-backup.json)</span>';
+  document.getElementById('backupMsg').innerHTML = '<span class="copied">✓ 내보냄</span>';
 }
 function importBackup(file){
   const reader = new FileReader();
   reader.onload = () => {
-    try{
-      const d = JSON.parse(reader.result);
-      if(d.people != null) localStorage.setItem(LS_PEOPLE, d.people);
-      if(d.manual != null) localStorage.setItem(LS_MANUAL, d.manual);
-      if(d.saved != null){
-        const cur = getSaved();
-        const inc = JSON.parse(d.saved || '{}');
-        localStorage.setItem(LS_SAVED, JSON.stringify({ ...cur, ...inc }));  // 병합(같은 달은 덮어씀)
-      }
-      document.getElementById('backupMsg').innerHTML = '<span class="copied">✓ 복원됨 — 새로고침합니다…</span>';
+    try{ applyBackupObject(JSON.parse(reader.result));
+      document.getElementById('backupMsg').innerHTML='<span class="copied">✓ 복원됨 — 새로고침…</span>';
       setTimeout(()=>location.reload(), 700);
-    }catch(e){ document.getElementById('backupMsg').innerHTML = '<span class="copied" style="color:#b91c1c">파일을 읽을 수 없습니다</span>'; }
+    }catch(e){ document.getElementById('backupMsg').innerHTML='<span class="copied" style="color:#b91c1c">파일 오류</span>'; }
   };
   reader.readAsText(file);
 }
@@ -489,11 +511,60 @@ document.getElementById('exportBtn').onclick = exportBackup;
 document.getElementById('importFileBtn').onclick = () => document.getElementById('importFile').click();
 document.getElementById('importFile').onchange = (e) => { if(e.target.files[0]) importBackup(e.target.files[0]); };
 
+// ---- GitHub 저장/불러오기 ----
+const GH_OWNER='medibb', GH_REPO='medibb.github.io', GH_PATH='duty/data/backup.json';
+const GH_API=`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+const LS_TOKEN='duty_gh_token';
+function ghMsg(t, err){ const e=document.getElementById('ghMsg'); if(e) e.innerHTML=`<span class="copied"${err?' style="color:#b91c1c"':''}>${t}</span>`; }
+function getToken(){ return (document.getElementById('ghToken').value.trim()) || localStorage.getItem(LS_TOKEN) || ''; }
+
+async function ghFetchRemote(token){   // 반환: {sha, data} 또는 null(404)
+  const headers = { 'Accept':'application/vnd.github+json' };
+  if(token) headers.Authorization = `Bearer ${token}`;
+  const r = await fetch(GH_API + '?t=' + Date.now(), { headers, cache:'no-store' });
+  if(r.status === 404) return null;
+  if(!r.ok) throw new Error('GET ' + r.status);
+  const j = await r.json();
+  const json = decodeURIComponent(escape(atob((j.content||'').replace(/\n/g,''))));
+  return { sha:j.sha, data: JSON.parse(json) };
+}
+async function ghLoad(silent){
+  try{
+    const res = await ghFetchRemote(getToken());
+    if(!res){ if(!silent) ghMsg('저장된 백업이 아직 없습니다', true); return false; }
+    const ok = applyBackupObject(res.data);
+    if(ok){ if(!silent) ghMsg('✓ 불러옴 — 새로고침…'); return true; }
+    if(!silent) ghMsg('백업 형식이 아닙니다', true); return false;
+  }catch(e){ if(!silent) ghMsg('불러오기 실패: '+e.message, true); return false; }
+}
+async function ghSave(){
+  const token = getToken();
+  if(!token){ ghMsg('먼저 토큰을 입력하세요(🔑 저장용 토큰 설정)', true); return; }
+  if(document.getElementById('ghRemember').checked) localStorage.setItem(LS_TOKEN, token);
+  ghMsg('저장 중…');
+  try{
+    let sha = null;
+    try{ const cur = await ghFetchRemote(token); if(cur) sha = cur.sha; }catch(e){}
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(backupData()))));
+    const body = { message:'duty backup '+new Date().toISOString(), content };
+    if(sha) body.sha = sha;
+    const r = await fetch(GH_API, { method:'PUT',
+      headers:{ Authorization:`Bearer ${token}`, 'Accept':'application/vnd.github+json', 'Content-Type':'application/json' },
+      body: JSON.stringify(body) });
+    if(!r.ok){ const t=await r.text(); throw new Error(r.status+' '+t.slice(0,140)); }
+    ghMsg('✓ GitHub에 저장됨');
+  }catch(e){ ghMsg('저장 실패: '+e.message, true); }
+}
+document.getElementById('ghLoadBtn').onclick = () => ghLoad(false).then(ok=>{ if(ok) setTimeout(()=>location.reload(),600); });
+document.getElementById('ghSaveBtn').onclick = ghSave;
+
 (function init(){
   const {y,m}=nextMonth();
   document.getElementById('year').value=y;
   document.getElementById('month').value=m;
   document.getElementById('manual').value = localStorage.getItem(LS_MANUAL) || '신용범';
+  const tok = localStorage.getItem(LS_TOKEN);
+  if(tok){ document.getElementById('ghToken').value = tok; document.getElementById('ghRemember').checked = true; }
   const saved=loadPeople();
   if(saved && saved.length){
     saved.forEach(p=>addPersonRow(p.name, p.unavail, p.cwd||0, p.cwe||0));
@@ -501,6 +572,14 @@ document.getElementById('importFile').onchange = (e) => { if(e.target.files[0]) 
     for(let i=0;i<4;i++) addPersonRow();
   }
   renderSavedList();
+
+  // 이 기기에 저장된 일정이 없으면 GitHub에서 자동으로 한 번 불러오기
+  const noLocal = Object.keys(getSaved()).length === 0;
+  if(noLocal && !sessionStorage.getItem('gh_autotried')){
+    sessionStorage.setItem('gh_autotried','1');
+    ghMsg('GitHub에서 불러오는 중…');
+    ghLoad(true).then(applied => { if(applied){ ghMsg('✓ 자동 불러옴'); setTimeout(()=>location.reload(), 500); } else ghMsg(''); });
+  }
 })();
 </script>
 </body>
