@@ -20,8 +20,7 @@
   th { background:#eef1f4; font-weight:600; }
   .people-table td, .people-table th { text-align:left; }
   .people-table input[type=text]{ width:100%; }
-  .people-table .num{ width:64px; }
-  .people-table .chk{ text-align:center; }
+  .people-table .num{ width:70px; }
   .row-period { display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; }
   .fld { display:flex; flex-direction:column; gap:4px; }
   button { cursor:pointer; border:1px solid var(--bd); background:#fff; padding:8px 14px; border-radius:6px; font-size:14px; }
@@ -32,7 +31,9 @@
   .sat { background:#eef4ff; }
   .we { background:var(--we); }
   .empty { background:#fff1f1; color:var(--warn); font-weight:600; }
-  .badge { font-size:11px; background:#fde2e2; color:#b91c1c; border-radius:4px; padding:1px 5px; margin-left:4px; }
+  .ovr-on { background:#fffbe6; }
+  .ovr-sel { font-size:13px; padding:3px 4px; border:1px solid var(--bd); border-radius:5px; }
+  .struck { color:#9aa4ae; text-decoration:line-through; font-size:12px; margin-left:6px; }
   .hint { font-size:12px; color:#6b7680; margin-top:6px; }
   .warnbox { background:#fff4f4; border:1px solid #f3c0c0; color:var(--warn); padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:14px; }
   .okbox { background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:14px; }
@@ -44,48 +45,45 @@
   .saved-item { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px dashed var(--bd); font-size:14px; }
   .saved-item .nm { flex:1; }
   .tag { background:#eef1f4; border-radius:5px; padding:2px 7px; font-size:12px; color:#3a444e; }
+  .badge { font-size:11px; background:#e0e7ff; color:#3730a3; border-radius:4px; padding:1px 5px; margin-left:4px; }
 </style>
 </head>
 <body>
   <h1>📅 당직 일정 생성기</h1>
-  <div class="sub">평일·주말/공휴일 분리 균형 · 후순위/평일전용 설정 · 공휴일 자동 · 각각 다음 달 이월</div>
+  <div class="sub">자동 균형(평일·주말 분리 + 이월) 후, 원하는 날에 수동 인원(예: 신용범)을 끼워넣으면 원래 담당자가 빠지고 자동 재계산</div>
 
   <div class="card">
-    <h2>1. 기간 · 공휴일</h2>
+    <h2>1. 기간 · 공휴일 · 수동 인원</h2>
     <div class="row-period">
       <div class="fld"><label>연도</label><input type="number" id="year" style="width:100px"></div>
       <div class="fld"><label>월</label><input type="number" id="month" min="1" max="12" style="width:80px"></div>
-      <div class="fld" style="flex:1; min-width:220px">
-        <label>추가 공휴일 (일) — 설·추석·석가탄신일·대체공휴일 등 음력/대체</label>
+      <div class="fld" style="flex:1; min-width:200px">
+        <label>추가 공휴일 (일) — 설·추석·석가탄신일·대체 등</label>
         <input type="text" id="addHoliday" placeholder="예: 16-18, 25">
       </div>
+      <div class="fld" style="flex:1; min-width:160px">
+        <label>수동 배정 인원 (쉼표로 여러 명)</label>
+        <input type="text" id="manual" placeholder="예: 신용범">
+      </div>
     </div>
-    <div class="hint">신정·3.1절·어린이날·현충일·광복절·개천절·한글날·성탄절은 <b>자동</b> 인식됩니다. 음력(설·추석·석가탄신일)과 대체공휴일은 위 칸에 직접 추가하세요.</div>
+    <div class="hint">신정·3.1절·어린이날·현충일·광복절·개천절·한글날·성탄절은 <b>자동</b> 인식. 음력/대체공휴일은 직접 추가하세요. · <b>수동 배정 인원</b>은 자동 배정에서 제외되고, 생성 후 일정표에서 원하는 날에 직접 넣습니다.</div>
   </div>
 
   <div class="card">
-    <h2>2. 당직자</h2>
+    <h2>2. 당직자 (자동 배정)</h2>
     <table class="people-table">
       <thead>
-        <tr>
-          <th>이름</th>
-          <th>불가일 (예: <code>3, 5, 10-12</code>)</th>
-          <th>평일이월</th>
-          <th>주말이월</th>
-          <th class="chk" title="다른 멤버를 먼저 채우고, 남는 평일에만 배정">후순위</th>
-          <th class="chk" title="주말·공휴일 제외(평일만)">평일만</th>
-          <th></th>
-        </tr>
+        <tr><th>이름</th><th>불가일 (예: <code>3, 5, 10-12</code>)</th><th>평일이월</th><th>주말이월</th><th></th></tr>
       </thead>
       <tbody id="peopleBody"></tbody>
     </table>
     <div class="btnbar"><button class="ghost" id="addPerson">+ 당직자 추가</button></div>
-    <div class="hint"><b>후순위</b>: 다른 멤버가 다 찬 뒤 남는 평일에만 들어감(회수 유동). · <b>평일만</b>: 주말/공휴일 근무 제외. · 신용범은 두 칸 모두 체크하세요.</div>
+    <div class="hint">이월값은 보통 0으로 두고, 생성 후 "다음 달 준비"가 자동으로 채웁니다.</div>
 
     <details style="margin-top:14px; border-top:1px solid var(--bd); padding-top:12px">
       <summary style="cursor:pointer; font-size:14px; font-weight:600; color:var(--accent)">📥 구글 시트에서 불러오기 (선택)</summary>
       <div style="margin-top:10px">
-        <div class="hint" style="margin-bottom:8px">컬럼 순서: <code>이름 ⟶ 불가일 ⟶ 평일이월 ⟶ 주말이월</code> (이월값은 없으면 생략 가능). 후순위/평일만 체크는 유지됩니다. 위 명단을 <b>덮어씁니다.</b></div>
+        <div class="hint" style="margin-bottom:8px">컬럼 순서: <code>이름 ⟶ 불가일 ⟶ 평일이월 ⟶ 주말이월</code> (이월값 생략 가능). 위 명단을 <b>덮어씁니다.</b></div>
         <textarea rows="4" id="importTA" placeholder="홍길동	3, 5, 12	0	0
 김철수	10-12	1	0"></textarea>
         <div class="btnbar"><button id="importPaste">붙여넣기로 채우기</button><span id="importMsg"></span></div>
@@ -107,15 +105,14 @@
 
 <script>
 const KO_DOW = ["일","월","화","수","목","금","토"];
-const LS_PEOPLE = 'duty_people_v2';
-const LS_SAVED  = 'duty_saved_v2';
+const LS_PEOPLE = 'duty_people_v3';
+const LS_MANUAL = 'duty_manual_v3';
+const LS_SAVED  = 'duty_saved_v3';
 
-// ---- 고정 양력 공휴일 ----
 function fixedHolidays(month){
   const map = {1:[1], 3:[1], 5:[5], 6:[6], 8:[15], 10:[3,9], 12:[25]};
   return new Set(map[month] || []);
 }
-const HOLIDAY_NAME = {'1-1':'신정','3-1':'삼일절','5-5':'어린이날','6-6':'현충일','8-15':'광복절','10-3':'개천절','10-9':'한글날','12-25':'성탄절'};
 
 function nextMonth(){
   const d = new Date();
@@ -124,7 +121,7 @@ function nextMonth(){
   return {y, m};
 }
 
-function addPersonRow(name="", unavail="", carryWd=0, carryWe=0, low=false, wdOnly=false){
+function addPersonRow(name="", unavail="", carryWd=0, carryWe=0){
   const tb = document.getElementById('peopleBody');
   const tr = document.createElement('tr');
   tr.innerHTML = `
@@ -132,8 +129,6 @@ function addPersonRow(name="", unavail="", carryWd=0, carryWe=0, low=false, wdOn
     <td><input type="text" class="p-unavail" value="${escAttr(unavail)}" placeholder="예: 3, 5, 10-12"></td>
     <td><input type="number" class="p-cwd num" value="${carryWd}" step="1"></td>
     <td><input type="number" class="p-cwe num" value="${carryWe}" step="1"></td>
-    <td class="chk"><input type="checkbox" class="p-low" ${low?'checked':''}></td>
-    <td class="chk"><input type="checkbox" class="p-wdonly" ${wdOnly?'checked':''}></td>
     <td><button class="del" title="삭제">✕</button></td>`;
   tr.querySelector('.del').onclick = () => { tr.remove(); savePeople(); };
   tr.querySelectorAll('input').forEach(i => i.addEventListener('change', savePeople));
@@ -141,7 +136,6 @@ function addPersonRow(name="", unavail="", carryWd=0, carryWe=0, low=false, wdOn
 }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
 
-// ---- 불가일/공휴일 파싱 ----
 function parseDays(str, daysInMonth){
   const set = new Set(); const bad = [];
   if(!str) return {set, bad};
@@ -157,6 +151,9 @@ function parseDays(str, daysInMonth){
   }
   return {set, bad};
 }
+function parseNames(str){
+  return (str||'').split(',').map(s=>s.trim()).filter(Boolean);
+}
 
 function readPeople(){
   return [...document.querySelectorAll('#peopleBody tr')].map(r => ({
@@ -164,8 +161,6 @@ function readPeople(){
     unavailRaw: r.querySelector('.p-unavail').value,
     carryWd: parseInt(r.querySelector('.p-cwd').value || '0',10) || 0,
     carryWe: parseInt(r.querySelector('.p-cwe').value || '0',10) || 0,
-    low: r.querySelector('.p-low').checked,
-    wdOnly: r.querySelector('.p-wdonly').checked,
   })).filter(p => p.name);
 }
 
@@ -176,10 +171,9 @@ function savePeople(){
     unavail: r.querySelector('.p-unavail').value,
     cwd: r.querySelector('.p-cwd').value,
     cwe: r.querySelector('.p-cwe').value,
-    low: r.querySelector('.p-low').checked,
-    wdOnly: r.querySelector('.p-wdonly').checked,
   }));
   localStorage.setItem(LS_PEOPLE, JSON.stringify(data));
+  localStorage.setItem(LS_MANUAL, document.getElementById('manual').value);
 }
 function loadPeople(){ try{ return JSON.parse(localStorage.getItem(LS_PEOPLE)) || null; }catch(e){ return null; } }
 
@@ -206,7 +200,7 @@ function renderSavedList(){
   }).join('');
 }
 function deleteMonth(k){ const all=getSaved(); delete all[k]; localStorage.setItem(LS_SAVED, JSON.stringify(all)); renderSavedList(); }
-function viewMonth(k){ const r=getSaved()[k]; if(!r) return; renderOutput(r);
+function viewMonth(k){ const r=getSaved()[k]; if(!r) return; if(!r.overrides) r.overrides={}; renderOutput(r);
   window.scrollTo({top:document.getElementById('output').offsetTop-20, behavior:'smooth'}); }
 
 // ---- 가져오기 ----
@@ -233,12 +227,12 @@ function applyImport(rows){
   const msg=document.getElementById('importMsg');
   if(!rows.length){ msg.innerHTML='<span class="copied" style="color:#b91c1c">읽을 데이터가 없습니다</span>'; return; }
   document.getElementById('peopleBody').innerHTML='';
-  rows.forEach(r=>addPersonRow(r.name, r.unavail, r.cwd, r.cwe, false, false));
+  rows.forEach(r=>addPersonRow(r.name, r.unavail, r.cwd, r.cwe));
   savePeople();
-  msg.innerHTML=`<span class="copied">✓ ${rows.length}명 불러옴 (후순위/평일만은 다시 체크하세요)</span>`;
+  msg.innerHTML=`<span class="copied">✓ ${rows.length}명 불러옴</span>`;
 }
 
-// ---- 핵심: 일정 생성 ----
+// ---- 자동 일정 생성 (4명 균형) ----
 function generate(){
   const year = parseInt(document.getElementById('year').value,10);
   const month = parseInt(document.getElementById('month').value,10);
@@ -249,8 +243,6 @@ function generate(){
   if(people.length < 2){ out.innerHTML=warn('당직자를 2명 이상 입력하세요.'); return; }
 
   const daysInMonth = new Date(year, month, 0).getDate();
-
-  // 공휴일 집합 = 고정 + 추가입력
   const holiday = fixedHolidays(month);
   const autoHolidayList = [...holiday];
   const {set:addH, bad:badH} = parseDays(document.getElementById('addHoliday').value, daysInMonth);
@@ -262,116 +254,113 @@ function generate(){
   const state = people.map((p,i)=>{
     const {set, bad} = parseDays(p.unavailRaw, daysInMonth);
     if(bad.length) warnings.push(`${p.name}: 무시된 불가일 → ${bad.join(', ')}`);
-    return { name:p.name, idx:i, unavail:set, low:p.low, wdOnly:p.wdOnly,
-             carryWd:p.carryWd, carryWe:p.carryWe, wd:0, we:0, last:-99 };
+    return { name:p.name, idx:i, unavail:set, carryWd:p.carryWd, carryWe:p.carryWe, wd:0, we:0, last:-99 };
   });
-
-  // ── 후순위(예: 신용범) 평일 예약: 매월 (일수-28)일을 최우선 배정 ──
-  // 31일→3, 30일→2, 윤2월(29)→1, 평2월(28)→0. 평일만 대상이라 말일이 주말/공휴면 가장 늦은 평일로 당겨 채움.
-  const lowPeople = state.filter(s => s.low);
-  const reserveCount = Math.max(0, daysInMonth - 28);
-  const reservedFor = {};   // day(number) -> 후순위 state
-  let reserveAssigned = 0;
-  if(lowPeople.length && reserveCount > 0){
-    const wdDaysDesc = [];
-    for(let day=daysInMonth; day>=1; day--){
-      const dow = new Date(year, month-1, day).getDay();
-      if(!(dow===0 || dow===6 || holiday.has(day))) wdDaysDesc.push(day); // 평일만
-    }
-    for(const day of wdDaysDesc){
-      if(reserveAssigned >= reserveCount) break;
-      for(let k=0; k<lowPeople.length; k++){
-        const person = lowPeople[(reserveAssigned + k) % lowPeople.length];
-        if(!person.unavail.has(day) && !reservedFor[day]){ reservedFor[day] = person; reserveAssigned++; break; }
-      }
-    }
-    if(reserveAssigned < reserveCount) warnings.push(`후순위 예약 ${reserveCount}일 중 ${reserveAssigned}일만 배정됨(평일 수/불가일 제약).`);
-  }
 
   const schedule = [];
   let prev = -1;
   for(let day=1; day<=daysInMonth; day++){
     const dow = new Date(year, month-1, day).getDay();
     const isHol = holiday.has(day);
-    const type = (dow===0 || dow===6 || isHol) ? 'we' : 'wd';   // 주말/공휴일 = we
+    const type = (dow===0 || dow===6 || isHol) ? 'we' : 'wd';
+    let pool = state.filter(s => !s.unavail.has(day));
     let chosen = null;
-
-    if(reservedFor[day]){                      // 후순위 예약일 — 최우선
-      chosen = reservedFor[day];
-      chosen.wd++; chosen.last = day; prev = chosen.idx;
+    if(pool.length === 0){
+      warnings.push(`${month}월 ${day}일(${KO_DOW[dow]}${isHol?'·공휴일':''}): 가능한 당직자가 없어 공석.`);
     } else {
-      // 일반 멤버 우선(후순위 제외) / 주말·공휴일이면 평일전용 제외
-      let pool = state.filter(s => !s.low && !s.unavail.has(day) && (type==='wd' || !s.wdOnly));
-      if(pool.length === 0 && type==='wd'){     // 평일인데 일반 멤버 전원 불가 → 후순위 예비 투입(공석 방지)
-        pool = state.filter(s => s.low && !s.unavail.has(day));
+      if(pool.length > 1 && prev !== -1){
+        const f = pool.filter(s => s.idx !== prev);
+        if(f.length) pool = f;
       }
-      if(pool.length === 0){
-        warnings.push(`${month}월 ${day}일(${KO_DOW[dow]}${isHol?'·공휴일':''}): 가능한 당직자가 없어 공석.`);
-      } else {
-        if(pool.length > 1 && prev !== -1){     // 연속 방지
-          const f = pool.filter(s => s.idx !== prev);
-          if(f.length) pool = f;
-        }
-        // 균형: 해당 유형의 (이월+이번달) 적은 순 → 오래 안 한 순 → 인덱스
-        pool.sort((a,b)=>{
-          const ca = type==='we' ? (a.carryWe+a.we) : (a.carryWd+a.wd);
-          const cb = type==='we' ? (b.carryWe+b.we) : (b.carryWd+b.wd);
-          return ca - cb || a.last - b.last || a.idx - b.idx;
-        });
-        chosen = pool[0];
-        if(type==='we') chosen.we++; else chosen.wd++;
-        chosen.last = day; prev = chosen.idx;
-      }
+      pool.sort((a,b)=>{
+        const ca = type==='we' ? (a.carryWe+a.we) : (a.carryWd+a.wd);
+        const cb = type==='we' ? (b.carryWe+b.we) : (b.carryWd+b.wd);
+        return ca - cb || a.last - b.last || a.idx - b.idx;
+      });
+      chosen = pool[0];
+      if(type==='we') chosen.we++; else chosen.wd++;
+      chosen.last = day; prev = chosen.idx;
     }
     schedule.push({day, dow, isHol, type, name: chosen?chosen.name:null});
   }
 
-  // 다음 달 이월값 (평일/주말 각각, 유형별 참여자 기준으로 정규화)
-  const normal = state.filter(s=>!s.low);
-  const weElig = state.filter(s=>!s.wdOnly);
-  const minWd = Math.min(...normal.map(s=>s.carryWd+s.wd));
-  const minWe = weElig.length ? Math.min(...weElig.map(s=>s.carryWe+s.we)) : 0;
-  const summary = state.map(s=>({
-    name:s.name, low:s.low, wdOnly:s.wdOnly, wd:s.wd, we:s.we,
-    nextWd: s.low ? 0 : (s.carryWd+s.wd) - minWd,
-    nextWe: s.wdOnly ? null : (s.carryWe+s.we) - minWe,
-  }));
-
-  const rec = { year, month, schedule, summary, warnings, autoHolidayList, addHolidayRaw: document.getElementById('addHoliday').value };
+  const rec = {
+    year, month, schedule, warnings, autoHolidayList,
+    people: people.map(p=>({name:p.name, carryWd:p.carryWd, carryWe:p.carryWe})),
+    manual: parseNames(document.getElementById('manual').value),
+    overrides: {},   // day -> 이름 (수동 교체)
+  };
   saveMonth(rec); savePeople();
   renderOutput(rec);
 }
 
 function warn(msg){ return `<div class="warnbox">⚠️ ${msg}</div>`; }
 
+// ---- 유효 일정/집계 계산 (자동 + 수동교체 반영) ----
+function computeEffective(rec){
+  const autoNames = rec.people.map(p=>p.name);
+  const manualNames = (rec.manual||[]).filter(n=>!autoNames.includes(n));
+  const allNames = [...autoNames, ...manualNames];
+
+  const eff = rec.schedule.map(r=>{
+    const ov = rec.overrides ? rec.overrides[r.day] : null;
+    return { ...r, base:r.name, eff: (ov!=null ? ov : r.name) };
+  });
+
+  const cnt = {}; allNames.forEach(n=>cnt[n]={wd:0,we:0});
+  eff.forEach(r=>{ if(r.eff && cnt[r.eff]){ if(r.type==='we') cnt[r.eff].we++; else cnt[r.eff].wd++; } });
+
+  // 이월: 자동 멤버만 정규화
+  const carryMap = {}; rec.people.forEach(p=>carryMap[p.name]={cwd:p.carryWd, cwe:p.carryWe});
+  const finalsWd = autoNames.map(n=>carryMap[n].cwd + cnt[n].wd);
+  const finalsWe = autoNames.map(n=>carryMap[n].cwe + cnt[n].we);
+  const minWd = finalsWd.length ? Math.min(...finalsWd) : 0;
+  const minWe = finalsWe.length ? Math.min(...finalsWe) : 0;
+
+  const summary = allNames.map((n,i)=>{
+    const isAuto = i < autoNames.length;
+    return {
+      name:n, manual:!isAuto, wd:cnt[n].wd, we:cnt[n].we,
+      nextWd: isAuto ? (carryMap[n].cwd + cnt[n].wd) - minWd : null,
+      nextWe: isAuto ? (carryMap[n].cwe + cnt[n].we) - minWe : null,
+    };
+  });
+  return { eff, summary, allNames, autoNames, manualNames };
+}
+
 function renderOutput(rec){
-  const {year, month, schedule, summary, warnings, autoHolidayList} = rec;
+  if(!rec.overrides) rec.overrides={};
+  const {year, month, warnings, autoHolidayList} = rec;
+  const { eff, summary, allNames, manualNames } = computeEffective(rec);
   const out = document.getElementById('output');
   let html='';
 
-  // 공휴일 안내
   const autoStr = (autoHolidayList||[]).map(d=>`${month}/${d}`).join(', ') || '없음';
-  const lowInfo = (summary||[]).filter(s=>s.low).map(s=>`${s.name} ${s.wd}일`).join(', ');
-  html += `<div class="okbox">자동 인식 공휴일: <b>${autoStr}</b> · 주말(토·일)은 자동 처리됨. 음력/대체공휴일이 빠졌다면 "추가 공휴일"에 넣고 다시 생성하세요.${lowInfo?`<br>후순위 평일 예약(일수−28 우선 배정): <b>${lowInfo}</b>`:''}</div>`;
+  html += `<div class="okbox">자동 인식 공휴일: <b>${autoStr}</b> · 주말(토·일) 자동 처리. 음력/대체공휴일은 "추가 공휴일"에 넣으세요.<br>일정표의 <b>당직자 칸 드롭다운</b>에서 수동 인원(${manualNames.join(', ')||'없음'})을 넣으면 원래 담당자가 빠지고 자동 재계산됩니다.</div>`;
 
   if(warnings && warnings.length){
     html += `<div class="warnbox">⚠️ 확인 필요<ul style="margin:6px 0 0; padding-left:18px">${warnings.map(w=>`<li>${w}</li>`).join('')}</ul></div>`;
   }
 
-  // 일정표
+  // 일정표 (드롭다운 편집)
   html += `<div class="card"><h2>${year}년 ${month}월 당직 일정</h2>`;
-  html += `<table><thead><tr><th>날짜</th><th>요일</th><th>구분</th><th>당직자</th></tr></thead><tbody>`;
-  for(const r of schedule){
-    const cls = r.type==='we' ? 'we' : (r.dow===6?'sat':'');
+  html += `<table><thead><tr><th>날짜</th><th>요일</th><th>구분</th><th>당직자 (드롭다운으로 교체)</th></tr></thead><tbody>`;
+  for(const r of eff){
+    const rowcls = r.type==='we' ? 'we' : (r.dow===6?'sat':'');
     const gubun = r.type==='we' ? (r.isHol?'공휴일':'주말') : '평일';
-    const cell = r.name ? r.name : '— 공석 —';
-    const tdcls = r.name ? '' : 'empty';
-    html += `<tr class="${cls}"><td>${month}/${r.day}</td><td>${KO_DOW[r.dow]}</td><td>${gubun}</td><td class="${tdcls}">${cell}</td></tr>`;
+    const overridden = (r.eff !== r.base);
+    const opts = ['<option value="__auto__">'+ (r.base||'공석') +' (자동)</option>']
+      .concat(allNames.map(n=>`<option value="${escAttr(n)}" ${overridden && r.eff===n ? 'selected':''}>${n}</option>`))
+      .join('');
+    const struck = overridden && r.base ? `<span class="struck">${r.base}</span>` : '';
+    html += `<tr class="${rowcls} ${overridden?'ovr-on':''}"><td>${month}/${r.day}</td><td>${KO_DOW[r.dow]}</td><td>${gubun}</td>
+      <td style="text-align:left"><select class="ovr-sel ovr" data-day="${r.day}">${opts}</select>${struck}</td></tr>`;
   }
   html += `</tbody></table>`;
   html += `<div class="btnbar">
       <button class="primary" id="copySched">📋 시트용으로 복사 (TSV)</button>
       <button class="primary" id="prepNext">다음 달 준비 →</button>
+      <button id="clearOvr">수동 교체 초기화</button>
       <span id="copyMsg"></span></div>`;
   html += `<details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px">복사가 안 되면 여기서 직접 선택해 복사</summary>
       <textarea rows="6" id="schedTA" readonly style="margin-top:8px"></textarea></details></div>`;
@@ -380,26 +369,38 @@ function renderOutput(rec){
   html += `<div class="grid2">`;
   html += `<div class="card"><h2>이번 달 배정 횟수</h2><table><thead><tr><th>당직자</th><th>평일</th><th>주말·공휴</th><th>합계</th></tr></thead><tbody>`;
   for(const s of summary){
-    const tags = (s.low?'<span class="badge">후순위</span>':'') + (s.wdOnly?'<span class="badge">평일만</span>':'');
-    html += `<tr><td style="text-align:left">${s.name}${tags}</td><td>${s.wd}</td><td>${s.wdOnly?'-':s.we}</td><td><b>${s.wd+s.we}</b></td></tr>`;
+    const tag = s.manual ? '<span class="badge">수동</span>' : '';
+    html += `<tr><td style="text-align:left">${s.name}${tag}</td><td>${s.wd}</td><td>${s.we}</td><td><b>${s.wd+s.we}</b></td></tr>`;
   }
   html += `</tbody></table></div>`;
 
   // 이월
   html += `<div class="card"><h2>다음 달 이월값</h2><table><thead><tr><th>당직자</th><th>평일이월</th><th>주말이월</th></tr></thead><tbody>`;
   for(const s of summary){
-    html += `<tr><td style="text-align:left">${s.name}</td><td>${s.nextWd}</td><td>${s.nextWe===null?'-':s.nextWe}</td></tr>`;
+    html += `<tr><td style="text-align:left">${s.name}</td><td>${s.nextWd===null?'-':s.nextWd}</td><td>${s.nextWe===null?'-':s.nextWe}</td></tr>`;
   }
-  html += `</tbody></table><div class="hint">"다음 달 준비" 버튼이 이 값을 자동 입력합니다.</div></div>`;
+  html += `</tbody></table><div class="hint">수동 인원은 이월 대상이 아닙니다(-). 교체로 줄어든 자동 멤버는 다음 달에 자동 보정됩니다.</div></div>`;
   html += `</div>`;
 
   out.innerHTML = html;
 
   const tsv = ['날짜\t요일\t구분\t당직자',
-    ...schedule.map(r=>`${month}/${r.day}\t${KO_DOW[r.dow]}\t${r.type==='we'?(r.isHol?'공휴일':'주말'):'평일'}\t${r.name||''}`)].join('\n');
+    ...eff.map(r=>`${month}/${r.day}\t${KO_DOW[r.dow]}\t${r.type==='we'?(r.isHol?'공휴일':'주말'):'평일'}\t${r.eff||''}`)].join('\n');
   document.getElementById('schedTA').value = tsv;
   document.getElementById('copySched').onclick = () => copyText(tsv, 'copyMsg', 'schedTA');
-  document.getElementById('prepNext').onclick = () => prepareNextMonth(rec);
+  document.getElementById('prepNext').onclick = () => prepareNextMonth(rec, summary);
+  document.getElementById('clearOvr').onclick = () => { rec.overrides={}; saveMonth(rec); renderOutput(rec); };
+
+  // 드롭다운 교체 핸들러
+  out.querySelectorAll('.ovr').forEach(sel=>{
+    sel.onchange = () => {
+      const day = +sel.dataset.day;
+      if(sel.value === '__auto__') delete rec.overrides[day];
+      else rec.overrides[day] = sel.value;
+      saveMonth(rec);
+      renderOutput(rec);
+    };
+  });
 }
 
 function copyText(text, msgId, taId){
@@ -411,9 +412,9 @@ function copyText(text, msgId, taId){
   else { fail(); }
 }
 
-function prepareNextMonth(rec){
+function prepareNextMonth(rec, summary){
   const wdByName={}, weByName={};
-  rec.summary.forEach(s=>{ wdByName[s.name]=s.nextWd; weByName[s.name]=(s.nextWe===null?0:s.nextWe); });
+  summary.forEach(s=>{ if(!s.manual){ wdByName[s.name]=s.nextWd; weByName[s.name]=s.nextWe; } });
   document.querySelectorAll('#peopleBody tr').forEach(tr=>{
     const name=tr.querySelector('.p-name').value.trim();
     tr.querySelector('.p-unavail').value='';
@@ -427,7 +428,7 @@ function prepareNextMonth(rec){
   document.getElementById('year').value=y; document.getElementById('month').value=m;
   savePeople();
   document.getElementById('output').innerHTML =
-    `<div class="okbox">✓ ${y}년 ${m}월 준비 완료 — 평일/주말 이월값이 입력되고 불가일·추가공휴일이 비워졌습니다. 새 값 입력 후 <b>일정 생성</b>을 누르세요.</div>`;
+    `<div class="okbox">✓ ${y}년 ${m}월 준비 완료 — 이월값 입력·불가일/추가공휴일 초기화됨. 새 값 입력 후 <b>일정 생성</b>을 누르세요.</div>`;
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -439,18 +440,19 @@ document.getElementById('resetCarry').onclick = () => {
 document.getElementById('year').addEventListener('change', savePeople);
 document.getElementById('month').addEventListener('change', savePeople);
 document.getElementById('addHoliday').addEventListener('change', savePeople);
+document.getElementById('manual').addEventListener('change', savePeople);
 document.getElementById('importPaste').onclick = () => applyImport(parseImport(document.getElementById('importTA').value));
 
 (function init(){
   const {y,m}=nextMonth();
   document.getElementById('year').value=y;
   document.getElementById('month').value=m;
+  document.getElementById('manual').value = localStorage.getItem(LS_MANUAL) || '신용범';
   const saved=loadPeople();
   if(saved && saved.length){
-    saved.forEach(p=>addPersonRow(p.name, p.unavail, p.cwd||0, p.cwe||0, !!p.low, !!p.wdOnly));
+    saved.forEach(p=>addPersonRow(p.name, p.unavail, p.cwd||0, p.cwe||0));
   } else {
     for(let i=0;i<4;i++) addPersonRow();
-    addPersonRow('신용범','',0,0,true,true);  // 예시: 후순위 + 평일만
   }
   renderSavedList();
 })();
