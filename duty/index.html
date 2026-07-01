@@ -98,6 +98,17 @@
 
   <div id="output"></div>
 
+  <div class="card">
+    <h2>☁️ 백업 / 복원 (기기 간 이동)</h2>
+    <div class="hint">이 앱은 <b>브라우저에 저장</b>되어 기기·브라우저마다 따로입니다. 다른 기기로 옮기려면: 한 기기에서 <b>내보내기</b> → 파일을 (카톡/드라이브 등으로) 전달 → 다른 기기에서 <b>가져오기</b>.</div>
+    <div class="btnbar">
+      <button id="exportBtn">⬇️ 내보내기(백업 파일)</button>
+      <button id="importFileBtn">⬆️ 가져오기(복원)</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+      <span id="backupMsg"></span>
+    </div>
+  </div>
+
   <div class="card" id="savedCard" style="display:none">
     <h2>💾 저장된 일정</h2>
     <div id="savedList"></div>
@@ -442,6 +453,41 @@ document.getElementById('month').addEventListener('change', savePeople);
 document.getElementById('addHoliday').addEventListener('change', savePeople);
 document.getElementById('manual').addEventListener('change', savePeople);
 document.getElementById('importPaste').onclick = () => applyImport(parseImport(document.getElementById('importTA').value));
+
+// 백업/복원 (JSON 파일)
+function exportBackup(){
+  const data = { _type:'duty-backup', v:3,
+    people: localStorage.getItem(LS_PEOPLE),
+    manual: localStorage.getItem(LS_MANUAL),
+    saved: localStorage.getItem(LS_SAVED) };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'duty-backup.json'; a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('backupMsg').innerHTML = '<span class="copied">✓ 내보냄 (duty-backup.json)</span>';
+}
+function importBackup(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const d = JSON.parse(reader.result);
+      if(d.people != null) localStorage.setItem(LS_PEOPLE, d.people);
+      if(d.manual != null) localStorage.setItem(LS_MANUAL, d.manual);
+      if(d.saved != null){
+        const cur = getSaved();
+        const inc = JSON.parse(d.saved || '{}');
+        localStorage.setItem(LS_SAVED, JSON.stringify({ ...cur, ...inc }));  // 병합(같은 달은 덮어씀)
+      }
+      document.getElementById('backupMsg').innerHTML = '<span class="copied">✓ 복원됨 — 새로고침합니다…</span>';
+      setTimeout(()=>location.reload(), 700);
+    }catch(e){ document.getElementById('backupMsg').innerHTML = '<span class="copied" style="color:#b91c1c">파일을 읽을 수 없습니다</span>'; }
+  };
+  reader.readAsText(file);
+}
+document.getElementById('exportBtn').onclick = exportBackup;
+document.getElementById('importFileBtn').onclick = () => document.getElementById('importFile').click();
+document.getElementById('importFile').onchange = (e) => { if(e.target.files[0]) importBackup(e.target.files[0]); };
 
 (function init(){
   const {y,m}=nextMonth();
